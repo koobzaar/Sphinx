@@ -9,10 +9,10 @@ class BaseNitrogenada(ABC):
 class BasesNitrogenadas(BaseNitrogenada):
     def getBase(self, binario):
         bases_nitrogenadas = {"00": "A", "01": "C", "10": "T", "11": "G"}
-        base_nitrogenada = ""
+        base_nitrogenada = []
         for i in range(0, len(binario), 2):
             par = binario[i:i+2]
-            base_nitrogenada += bases_nitrogenadas[par]
+            base_nitrogenada.append(bases_nitrogenadas[par])
         return base_nitrogenada
 
 class ConversorBinario(ABC):
