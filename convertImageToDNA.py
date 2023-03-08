@@ -69,4 +69,3 @@ class ImagemPadrao(Imagem):
         vetor_g = ImagemPadrao.matriz_para_vetor(matriz_g)
         vetor_b = ImagemPadrao.matriz_para_vetor(matriz_b)
         return vetor_r, vetor_g, vetor_b
-
