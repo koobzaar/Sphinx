@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import matplotlib.image as img
-
+import numpy as np
 class BaseNitrogenada(ABC):
     @abstractmethod
     def getBase(self, par):
@@ -36,13 +36,21 @@ class Imagem(ABC):
 class ImagemPadrao(Imagem):
     def lerImagem(self, caminho):
         return img.imread(caminho)
+    def matriz_para_vetor(matriz):
+    # Use o NumPy para criar um vetor a partir da matriz
+        vetor = np.array(matriz).reshape(-1)
+        return vetor
 
     def criarMatrizNitrogenada(self, imagem):
         bases_nitrogenadas = BasesNitrogenadas()
         conversor_binario = ConversorBinarioPadrao()
-        matriz_nitrogenada = []
+        matriz_r = []
+        matriz_g = []
+        matriz_b = []
         for i in range(len(imagem)):
-            linha = []
+            linha_r = []
+            linha_g = []
+            linha_b = []
             for j in range(len(imagem[i])):
                 r, g, b = imagem[i][j]
                 r_binario = conversor_binario.converter(r)
@@ -51,14 +59,14 @@ class ImagemPadrao(Imagem):
                 r_base = bases_nitrogenadas.getBase(r_binario)
                 g_base = bases_nitrogenadas.getBase(g_binario)
                 b_base = bases_nitrogenadas.getBase(b_binario)
-                linha.append([r_base, g_base, b_base])
-            matriz_nitrogenada.append(linha)
-        return matriz_nitrogenada
+                linha_r.append(r_base)
+                linha_g.append(g_base)
+                linha_b.append(b_base)
+            matriz_r.append(linha_r)
+            matriz_g.append(linha_g)
+            matriz_b.append(linha_b)
+        vetor_r = ImagemPadrao.matriz_para_vetor(matriz_r)
+        vetor_g = ImagemPadrao.matriz_para_vetor(matriz_g)
+        vetor_b = ImagemPadrao.matriz_para_vetor(matriz_b)
+        return vetor_r, vetor_g, vetor_b
 
-imagem = ImagemPadrao()
-image = imagem.lerImagem("./image.jpg")
-matriz_nitrogenada = imagem.criarMatrizNitrogenada(image)
-
-print(matriz_nitrogenada)
-print(len(matriz_nitrogenada))
-print(len(matriz_nitrogenada[0]))
