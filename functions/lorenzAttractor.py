@@ -1,45 +1,74 @@
-
+import numpy as np
 import textwrap
-class LorenzAttractor:
-    def __init__(self, x: float, y: float, z: float, a: float, b: float, c: float, key: str):
-        self.x = x
-        self.y = y
-        self.z = z
-        self.a = a
-        self.b = b
-        self.c = c
-        self.key = key
+from scipy.integrate import odeint
+from bisect import bisect_left as bsearch
+from tqdm import tqdm
+a, b, c = 10, 2.667, 28
+x0, y0, z0 = 0, 0, 0
+tmax, N = 100, 10000
 
-    def calculate_next_values(self, t: float) -> tuple[float, float, float]:
-        x, y, z = self.x, self.y, self.z
-        x_dot = -self.a * (x - y)
-        y_dot = self.c * x - y - x * z
-        z_dot = -self.b * z + x * y
+def lorenz(X, t, a, b, c):
+    x, y, z = X
+    x_dot = -a*(x - y)
+    y_dot = c*x - y - x*z
+    z_dot = -b*z + x*y
+    return x_dot, y_dot, z_dot
 
-        self.x = x + x_dot * t
-        self.y = y + y_dot * t
-        self.z = z + z_dot * t
+def update_lorentz (key):
+    
+    key_bin = bin(int(key, 16))[2:].zfill(256) 
+    k={}                                       
+    key_32_parts=textwrap.wrap(key_bin, 8)     
+    num=1
+    for i in key_32_parts:
+        k["k{0}".format(num)]=i
+        num = num + 1
+    t1 = t2 = t3 = 0
+    for i in range (1,12):
+        t1=t1^int(k["k{0}".format(i)],2)
+    for i in range (12,23):
+        t2=t2^int(k["k{0}".format(i)],2)
+    for i in range (23,33):
+        t3=t3^int(k["k{0}".format(i)],2)   
+    global x0 ,y0, z0
+    print(x0,y0,z0)
+    x0=x0 + t1/256            
+    y0=y0 + t2/256            
+    z0=z0 + t3/256
 
-        return self.x, self.y, self.z
+def gen_chaos_seq(m,n):
+    global x0,y0,z0,a,b,c,N
+    print(x0, y0, z0)
+    N=m*n*4
+    x= np.array((m,n*4))
+    y= np.array((m,n*4))
+    z= np.array((m,n*4))
+    t = np.linspace(0, tmax, N)
+    f = odeint(lorenz, (x0, y0, z0), t, args=(a, b, c))
+    x, y, z = f.T
+    x=x[:(N)]
+    y=y[:(N)]
+    z=z[:(N)]
+    return x,y,z
 
-    def _get_key_dict(self) -> dict[str, str]:
-        key_bin = bin(int(self.key, 16))[2:].zfill(256)
-        key_dict = {}
-        key_32_parts = [key_bin[i:i+8] for i in range(0, 256, 8)]
-        for i, key_part in enumerate(key_32_parts):
-            key_dict[f'k{i+1}'] = key_part
-        return key_dict
-
-    def update_lorentz(self):
-        t1, t2, t3 = 0, 0, 0
-        key_dict = self._get_key_dict()
-        for i in range(1, 12):
-            t1 ^= int(key_dict[f'k{i}'], 2)
-        for i in range(12, 23):
-            t2 ^= int(key_dict[f'k{i}'], 2)
-        for i in range(23, 33):
-            t3 ^= int(key_dict[f'k{i}'], 2) 
-        x0=x0 + t1/256            
-        y0=y0 + t2/256            
-        z0=z0 + t3/256
-        return x0, y0, z0
+def sequence_indexing(x,y,z):
+    n=len(x)
+    fx=np.zeros((n),dtype=np.uint32)
+    fy=np.zeros((n),dtype=np.uint32)
+    fz=np.zeros((n),dtype=np.uint32)
+    seq=sorted(x)
+    for k1 in tqdm(range(0,n), desc="----[*] Indexando sequencia de Lorenz para x..."):
+            t = x[k1]
+            k2 = bsearch(seq, t)
+            fx[k1]=k2
+    seq=sorted(y)
+    for k1 in tqdm(range(0,n), desc="----[*] Indexando sequencia de Lorenz para y..."):
+            t = y[k1]
+            k2 = bsearch(seq, t)
+            fy[k1]=k2
+    seq=sorted(z)
+    for k1 in tqdm(range(0,n), desc="----[*] Indexando sequencia de Lorenz para z..."):
+            t = z[k1]
+            k2 = bsearch(seq, t)
+            fz[k1]=k2
+    return fx,fy,fz

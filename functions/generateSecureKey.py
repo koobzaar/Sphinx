@@ -1,21 +1,16 @@
 from PIL import Image
 import hashlib
+from tqdm import tqdm
 
-class Hash:
-    def gerarHash(self, caminhoImagem):
-        matrizImagem = Image.open(caminhoImagem)
-        larguraImagem, alturaImagem = matrizImagem.size
-        pix = matrizImagem.load()          
-        plainimage = list()
-        for linha in range(alturaImagem):
-            for coluna in range(larguraImagem):
-                for valoresPixelRGB in range(0,3):
-                    plainimage.append(pix[linha, coluna][valoresPixelRGB])
-
-        chaveHash = self.geraChaveHash(plainimage)
-        return larguraImagem, alturaImagem, chaveHash
-
-    def geraChaveHash(self, matrizImagem):
-        chaveHash = hashlib.sha256()
-        chaveHash.update(bytearray(matrizImagem))
-        return chaveHash.hexdigest()
+def securekey(iname):
+    img = Image.open(iname)
+    m, n = img.size
+    pix = img.load()          
+    plainimage = []                         # _plainimage contains all the rgb values continuously
+    for y in tqdm(range(n), desc="[+] Gerando chave hash..."):
+        for x in range(m):
+            for k in range(0, 3):
+                plainimage.append(pix[x,y][k])    
+    key = hashlib.sha256()                  # key is made a hash.sha256 object  
+    key.update(bytearray(plainimage))       # image data is fed to generate digest
+    return key.hexdigest(), m, n
