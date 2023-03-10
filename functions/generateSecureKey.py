@@ -1,17 +1,29 @@
 import hashlib
-from tqdm import tqdm
 from PIL import Image
-def securekey (iname):
+import numpy as np
+from tqdm import tqdm 
+
+def logistic_map(x,r):
+    return r*x*(1-x)
+
+def securekey(iname):
     img = Image.open(iname)
     m, n = img.size
-    pix = img.load()          
-    plainimage = list()                         #_plainimage contains all the rgb values continuously
-    for y in tqdm(range(n), desc="──█ Gerando chave hash..."):
-        for x in range(m):
-            for k in range(0,3):
-                plainimage.append(pix[x,y][k])    
-    key = hashlib.sha256()                      #key is made a hash.sha256 object  
-    key.update(bytearray(plainimage))          #image data is fed to generate digest
-    return key.hexdigest() ,m ,n
+    pix = np.array(img) 
 
-         
+    x0 = 0.5 
+    r = 3.9 
+
+    random_seq = [] 
+
+    for i in tqdm(range(m*n*3), desc="──█ Gerando a chave hash utilizando os pixels originais da imagem e um mapa logistico..."): 
+        x0 = logistic_map(x0,r) 
+        random_seq.append(int(x0*255)) 
+
+    random_seq = np.array(random_seq).reshape(m,n,3) 
+
+    encrypted_img = pix ^ random_seq 
+
+    key = hashlib.sha256() 
+    key.update(encrypted_img) 
+    return key.hexdigest(), m, n 

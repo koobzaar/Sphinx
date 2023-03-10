@@ -23,6 +23,7 @@ if (__name__ == "__main__"):
     encodedKeyMatrix = key_matrix_encode(encryptionKey, blueChannel)
     finalBlueChannel, finalGreenChannel, finalRedChannel = xor_operation(encodedBlueChannel, encodedGreenChannel, encodedRedChannel, encodedKeyMatrix)
     chaosSeqX, chaosSeqY, chaosSeqZ = gen_chaos_seq(rows, columns)
+    plot(chaosSeqX, chaosSeqY, chaosSeqZ)
     indexedSeqX, indexedSeqY, indexedSeqZ = sequence_indexing(chaosSeqX, chaosSeqY, chaosSeqZ)
     scrambledBlueChannel, scrambledGreenChannel, scrambledRedChannel = scramble(indexedSeqX, indexedSeqY, indexedSeqZ, finalBlueChannel, finalRedChannel, finalGreenChannel)
     decodedBlueChannel, decodedGreenChannel, decodedRedChannel = dna_decode(scrambledBlueChannel, scrambledGreenChannel, scrambledRedChannel)

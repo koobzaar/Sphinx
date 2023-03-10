@@ -12,7 +12,6 @@ from functions.matrixDNAManipulator import *
 from functions.matrixManipulator import *
 from functions.console import *
 
-
 def decrypt():
     cls()
     showASCIIartHeader()

@@ -15,7 +15,6 @@ dna["AC"]=dna["CA"]=dna["GT"]=dna["TG"]="C"
 dna["AT"]=dna["TA"]=dna["CG"]=dna["GC"]="T"
 import numpy as np
 from tqdm import tqdm
-from typing import Tuple
 
 def dna_encode(red_matrix, green_matrix, blue_matrix):
     red_matrix = np.unpackbits(red_matrix, axis=1)

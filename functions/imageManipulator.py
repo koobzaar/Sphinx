@@ -17,6 +17,11 @@ def select_image_path() -> str:
     else:
         print("[ERROR] An error has occurred while loading the image.")
     return path
+import datetime
+
+def get_filename_with_timestamp():
+    now = datetime.datetime.now()
+    return now.strftime("%d-%m-%Y_%H-%M-%S")
 
 def save_encrypted_image(b: list, g: list, r: list, image_path: str, hash_key: str):
     """Encrypts the image and saves it as a PNG file in the 'encrypted_output' folder.
@@ -32,8 +37,9 @@ def save_encrypted_image(b: list, g: list, r: list, image_path: str, hash_key: s
     img[:, :, 2] = r
     img[:, :, 1] = g
     img[:, :, 0] = b
-    cv2.imwrite(("./encrypted_output/" + str(int(time.time())) + ".png"), img)
-    print("[SUCCESS] Encrypted image saved as: " + str(int(time.time())) + ".png in the 'encrypted_output' folder.\n[INFO] The hash key (required to decrypt) was saved to your clipboard.\n[INFO] Your hash key is: " + hash_key)
+    fileName = get_filename_with_timestamp()
+    cv2.imwrite(("./encrypted_output/" + fileName + ".png"), img)
+    print("[SUCCESS] Encrypted image saved as: " + fileName + ".png in the 'encrypted_output' folder.\n[INFO] The hash key (required to decrypt) was saved to your clipboard.\n[INFO] Your hash key is: " + hash_key)
     pyperclip.copy(hash_key)
 
 def save_decrypted_image(blue: list, green: list, red: list, p: int, q:int, original_image_path: str):
