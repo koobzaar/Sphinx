@@ -42,5 +42,5 @@ def save_decrypted_image(blue: list, green: list, red: list, p: int, q:int, orig
     img[:,:,0] = red
     img[:,:,1] = green
     img[:,:,2] = blue
-    cv2.imwrite((os.path.basename(original_image_path).removesuffix('.png')+"_decrypted.png"), img)
+    cv2.imwrite(("decrypter_output/"+os.path.basename(original_image_path).removesuffix('.png')+"_decrypted.png"), img)
     print("[SUCCESS] Decrypted image saved as: " + str((os.path.basename(original_image_path)+"_decrypted.png")) + ".png in the 'decrypted_output' folder.")

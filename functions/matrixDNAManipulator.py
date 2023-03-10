@@ -30,6 +30,7 @@ def dna_encode(red_matrix, green_matrix, blue_matrix):
     for color, encoded in zip((red_matrix, green_matrix, blue_matrix), 
                               (encoded_red, encoded_green, encoded_blue)):
         idx = 0
+        index+=1
         for j in tqdm(range(0, m), desc="────█ Encoding "+matrix_names[index]+" matrix into nucleotides..."):
             for i in range(0, n, 2):
                 encoded[j, idx] = dna["{0}{1}".format(color[j, i], color[j, i+1])]

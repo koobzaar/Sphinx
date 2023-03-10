@@ -10,14 +10,16 @@ from functions.imageManipulator import *
 from functions.lorenzAttractor import *
 from functions.matrixDNAManipulator import *
 from functions.matrixManipulator import *
+from functions.console import *
 
 
 def decrypt():
+    cls()
+    showASCIIartHeader()
     caminhoImagem = select_image_path()
     chaveHash = input("Digite a chave de hash utilizada para encriptar a imagem: ")
     update_lorentz(chaveHash) 
     img = cv2.imread(caminhoImagem)
-    print(img)
     r,g,b=split_into_rgb_channels(img)
     p, q = r.shape
     x,y,z = gen_chaos_seq(p, q)

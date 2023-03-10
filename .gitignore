@@ -128,3 +128,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+encrypted_output/
+decrypter_output/
+graph.png

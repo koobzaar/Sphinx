@@ -4,6 +4,9 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 from bisect import bisect_left as bsearch
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.animation import FuncAnimation
 a, b, c = 10, 2.667, 28
 x0, y0, z0 = 0, 0, 0
 tmax, N = 100, 10000
@@ -70,12 +73,15 @@ def sequence_indexing(x,y,z):
             k2 = bsearch(seq, t)
             fz[k1]=k2
     return fx,fy,fz
+
 def plot(x,y,z):
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(111, projection='3d')
     s = 100
     c = np.linspace(0,1,N)
-    for i in range(0,N-s,s):
+    for i in tqdm(range(0,N-s,s), desc="────█ Plotando grafico 3D..."):
         ax.plot(x[i:i+s+1], y[i:i+s+1], z[i:i+s+1], color=(1-c[i],c[i],1), alpha=0.4)
     ax.set_axis_off()
-    plt.show()
+    ax.set_facecolor('black')
+    fig.patch.set_facecolor('black')
+    plt.savefig('graph.png', transparent=True)
