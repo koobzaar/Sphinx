@@ -1,22 +1,21 @@
-# 🧬Sphinx
-Criptografia de imagens usando operações de sequência de DNA e caos espaço-temporal
+# Sphinx 
 
-## Introdução
-Sphinx é um algoritmo de criptografia de imagem colorida baseado em operações de sequência de DNA, chaves de uso único e caos espaço-temporal. Este projeto tem como objetivo fornecer um método de criptografia seguro e eficiente para imagens coloridas, utilizando as propriedades únicas da computação de DNA.
-
-## Explicação
-Sphinx funciona gerando fluxos de chaves usando o CML baseado em mapa NCA, onde a função de hash SHA-256 é usada para atualizar os parâmetros do sistema e as condições iniciais combinando com a imagem simples e as chaves secretas. A imagem simples é então decomposta em componentes vermelho, verde e azul e convertida aleatoriamente em três matrizes de DNA pelas regras de codificação de DNA. Essas três matrizes de DNA são combinadas em uma nova matriz de DNA e, em seguida, permutações de linhas e colunas são realizadas nela. A matriz de DNA embaralhada é então dividida em três blocos iguais e operações de adição, subtração e XOR de DNA são implementadas nesses blocos de DNA. Finalmente, as matrizes de DNA são transformadas em matrizes decimais separadamente de acordo com as regras de decodificação de DNA. Um processo de difusão é realizado usando os fluxos de chaves para aumentar a segurança do criptossistema, resultando em uma imagem cifrada.
-
-## Como funciona
-O processo de criptografar uma imagem usando Sphinx é o seguinte:
-
-- Gerar fluxos de chaves usando o CML baseado em mapa NCA e combiná-los com a imagem simples e as chaves secretas usando a função de hash SHA-256.
-- Decompor a imagem simples em componentes vermelho, verde e azul e convertê-las aleatoriamente em três matrizes de DNA usando as regras de codificação de DNA.
-- Combinar as três matrizes de DNA em uma nova matriz de DNA e realizar permutações de linhas e colunas.
-- Dividir a matriz de DNA embaralhada em três blocos iguais e implementar operações de adição, subtração e XOR de DNA nesses blocos.
-- Transformar as matrizes de DNA em matrizes decimais separadamente de acordo com as regras de decodificação de DNA.
-- Realizar um processo de difusão usando os fluxos de chaves para aumentar a segurança e obter a imagem cifrada.
+Sphinx é um **crypter** de imagem colorida utilizando o **atractor de Lorenz** e **bases nitrogenadas**.
 
 
-## Objetivos
-O principal objetivo do Sphinx é fornecer um método seguro e eficiente de criptografia de imagens coloridas usando operações de sequência de DNA e caos espaço-temporal. Ao utilizar as propriedades únicas da computação de DNA e da teoria do caos, Sphinx tem como objetivo aumentar a segurança dos métodos de criptografia de imagens.
+## Atractor de Lorenz
+<img src="https://clipground.com/images/attractor-clipart-3.jpg" alt="drawing" style="width:100px;height:100px"/>
+
+O **atrator de Lorenz** é um conjunto de **pontos em um espaço tridimensional** que exibe um comportamento caótico. O conjunto de pontos é formado por trajetórias que oscilam em torno de duas asas simétricas e são atraídas para um ponto central denominado ponto fixo instável. O conjunto de pontos exibe uma estrutura fractal e possui propriedades interessantes, como a dependência sensível das condições iniciais e a existência de pontos críticos que dividem o atrator em regiões diferentes.
+
+## Funcionamento
+
+O Sphinx é um método de criptografia de **imagem** que utiliza operações de** codificação de DNA**, **caos espacial-temporal** e uma **chave única gerada a partir da imagem** que se deseja criptografar.
+
+- Inicialmente, a imagem é importada e a **chave segura é gerada**. A chave é utilizada para **atualizar o atrator de Lorenz**, que é um sistema dinâmico caótico. Essa atualização gera uma sequência de números aleatórios que será utilizada posteriormente.
+
+- A imagem é decomposta em suas componentes **vermelha, verde e azul**. Em seguida, essas componentes são convertidas em matrizes de DNA, que são criadas usando regras de **codificação de DNA**.
+
+- A chave é usada para criar uma matriz adicional de DNA, que é usada para **embaralhar as matrizes de DNA** criadas anteriormente. As matrizes de DNA são combinadas usando operações de exclusão lógica (XOR), o que adiciona mais uma camada de segurança ao processo de criptografia.
+
+- A sequência de números aleatórios gerada anteriormente é usada para criar uma sequência **indexada** que é usada para embaralhar as matrizes de DNA. As matrizes de DNA são então **decodificadas** em suas componentes vermelha, verde e azul originais, e a imagem é recuperada a partir dessas componentes.

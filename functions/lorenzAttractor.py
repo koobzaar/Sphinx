@@ -31,14 +31,12 @@ def update_lorentz (key):
     for i in range (23,33):
         t3=t3^int(k["k{0}".format(i)],2)   
     global x0 ,y0, z0
-    print(x0,y0,z0)
     x0=x0 + t1/256            
     y0=y0 + t2/256            
     z0=z0 + t3/256
 
 def gen_chaos_seq(m,n):
     global x0,y0,z0,a,b,c,N
-    print(x0, y0, z0)
     N=m*n*4
     x= np.array((m,n*4))
     y= np.array((m,n*4))
@@ -57,17 +55,17 @@ def sequence_indexing(x,y,z):
     fy=np.zeros((n),dtype=np.uint32)
     fz=np.zeros((n),dtype=np.uint32)
     seq=sorted(x)
-    for k1 in tqdm(range(0,n), desc="----[*] Indexando sequencia de Lorenz para x..."):
+    for k1 in tqdm(range(0,n), desc="────█ Indexando sequencia de Lorenz para x..."):
             t = x[k1]
             k2 = bsearch(seq, t)
             fx[k1]=k2
     seq=sorted(y)
-    for k1 in tqdm(range(0,n), desc="----[*] Indexando sequencia de Lorenz para y..."):
+    for k1 in tqdm(range(0,n), desc="────█ Indexando sequencia de Lorenz para y..."):
             t = y[k1]
             k2 = bsearch(seq, t)
             fy[k1]=k2
     seq=sorted(z)
-    for k1 in tqdm(range(0,n), desc="----[*] Indexando sequencia de Lorenz para z..."):
+    for k1 in tqdm(range(0,n), desc="────█ Indexando sequencia de Lorenz para z..."):
             t = z[k1]
             k2 = bsearch(seq, t)
             fz[k1]=k2

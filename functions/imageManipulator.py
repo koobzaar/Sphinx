@@ -11,6 +11,6 @@ def recover_image(r, g, b, iname):
     img[:,:,2] = r
     img[:,:,1] = g
     img[:,:,0] = b
-    cv2.imwrite(("./"+str( time.time() )+ ".jpg"), img)
+    cv2.imwrite(("./"+str(int( time.time() ))+ ".jpg"), img)
     print("[SUCESSO] Imagem encriptada com sucesso.")
     return img

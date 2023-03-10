@@ -31,7 +31,7 @@ def dna_encode(r, g, b):
     for color,enc in zip((b,g,r),(b_enc,g_enc,r_enc)):
         idx=0
         indexador+=1
-        for j in tqdm(range(0,m), desc="----[*] Codificando matriz "+matrizes[indexador]+" em nucleotidios..."):
+        for j in tqdm(range(0,m), desc="────█ Codificando matriz "+matrizes[indexador]+" em nucleotidios..."):
             
             for i in range(0,n,2):
                 enc[j,idx]=dna["{0}{1}".format(color[j,i],color[j,i+1])]
@@ -51,15 +51,13 @@ def xor_operation(b,g,r,mk):
     
     m,n = b.shape
     
-    print(m,n)
-    print(r)
     bx=np.chararray((m,n))
     gx=np.chararray((m,n))
     rx=np.chararray((m,n))
     b=b.astype(str)
     g=g.astype(str)
     r=r.astype(str)
-    for i in range(0,m):
+    for i in tqdm(range(0,m), desc="────█ Aplicando XOR nas matrizes R, G e B..."):
         for j in range (0,n):
             bx[i,j] = dna["{0}{1}".format(b[i,j],mk[i,j])]
             gx[i,j] = dna["{0}{1}".format(g[i,j],mk[i,j])]
@@ -76,13 +74,13 @@ def key_matrix_encode(key,b):
     key_bin = bin(int(key, 16))[2:].zfill(256)
     Mk = np.zeros((m,n),dtype=np.uint8)
     x=0
-    for j in tqdm(range(0,m), desc="[+] Usando a chave hash para gerar uma matriz binaria Mk..."):
+    for j in tqdm(range(0,m), desc="──█ Usando a chave hash para gerar uma matriz binaria Mk..."):
             for i in range(0,n):
                 Mk[j,i]=key_bin[x%256]
                 x+=1
     Mk_enc=np.chararray((m,int(n/2)))
     idx=0
-    for j in tqdm(range(0,m), desc="----[*] Codificando a matriz binaria Mk em nucleotidios..."):
+    for j in tqdm(range(0,m), desc="────█ Codificando a matriz binaria Mk em nucleotidios..."):
         for i in range(0,n,2):
             if idx==(n/2):
                 idx=0
@@ -97,7 +95,7 @@ def dna_decode(r,g,b):
     g_dec= np.ndarray((m,int(n*2)),dtype=np.uint8)
     b_dec= np.ndarray((m,int(n*2)),dtype=np.uint8)
     for color,dec in zip((b,g,r),(b_dec,g_dec,r_dec)):
-        for j in tqdm(range(0,m),desc="----[*] Decodificando nucleotidios em binario..."):
+        for j in tqdm(range(0,m),desc="────█ Decodificando nucleotidios..."):
             for i in range(0,n):
                 dec[j,2*i]=dna["{0}".format(color[j,i])][0]
                 dec[j,2*i+1]=dna["{0}".format(color[j,i])][1]

@@ -31,14 +31,14 @@ def scramble(fx,fy,fz,b,r,g):
     bx_s = np.chararray((size))
     gx_s = np.chararray((size))
     rx_s = np.chararray((size))
-    print("Aplicando os numeros da funcao de Lorenz para embaralhar as matrizes...")
-    for i in tqdm(range(size), desc="----[*] Embaralhando a matriz vermelha..."):
+    print("──█ Aplicando os numeros da funcao de Lorenz para embaralhar as matrizes...")
+    for i in tqdm(range(size), desc="────█ Embaralhando a matriz vermelha..."):
         idx = fx[i]
         rx_s[i] = rx[idx]
-    for i in tqdm(range(size), desc="----[*] Embaralhando a matriz verde..."):
+    for i in tqdm(range(size), desc="────█ Embaralhando a matriz verde..."):
         idx = fy[i]
         gx_s[i] = gx[idx]
-    for i in tqdm(range(size), desc="----[*] Embaralhando a matriz azul..."):
+    for i in tqdm(range(size), desc="────█ Embaralhando a matriz azul..."):
         idx = fz[i]
         bx_s[i] = bx[idx]
     
