@@ -56,8 +56,12 @@ O processo de decriptar é praticamente igual ao de decriptar. Importe a imagem 
 
 # Créditos
 The author of this project is **Bruno Bezerra Trigueiro**, currently affiliated with the **São Paulo State Technological College (FATEC)**. 
+It's inspired by the following scientific publication:
+https://www.sciencedirect.com/science/article/abs/pii/S0165168418300859
 
-The author can be **contacted** through the email addresses [bruno.trigueiro@proton.me](mailto:bruno.trigueiro@proton.me) or [bruno.trigueiro@fatec.sp.gov.br](mailto:bruno.trigueiro@fatec.sp.gov.br). 
+The author can be **contacted** through the email addresses [bruno.trigueiro@proton.me](mailto:bruno.trigueiro@proton.me) or [bruno.trigueiro@fatec.sp.gov.br](mailto:bruno.trigueiro@fatec.sp.gov.br).
+Also, you can contact me at:
+https://www.linkedin.com/in/brunotrigueiro/
 
 This project was funded by **CPS (Centro Paula Souza)**.
 
