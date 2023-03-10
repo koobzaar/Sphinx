@@ -1,6 +1,6 @@
-# Sphinx 
+# 🧬 Sphinx 
 
-Sphinx é um **crypter** de imagem colorida utilizando o **atractor de Lorenz** e **bases nitrogenadas**.
+Sphinx é um **crypter de imagens colorida**s. Esse método utiliza o **atractor de Lorenz**, que é um **sistema dinâmico não linear** que descreve o comportamento do movimento de fluidos e gases, e as **bases nitrogenadas**, que são moléculas presentes no **DNA** e **RNA**. Ao combinar esses elementos, o Sphinx é capaz de transformar imagens em um formato codificado que só pode ser decifrado com a utilização da chave correta. Esse tipo de técnica é comumente utilizado para proteger informações sensíveis e confidenciais, como imagens de segurança ou documentos sigilosos.
 
 
 ## Atractor de Lorenz
