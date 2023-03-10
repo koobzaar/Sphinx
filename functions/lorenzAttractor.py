@@ -1,6 +1,7 @@
-import numpy as np
 import textwrap
+import numpy as np
 from scipy.integrate import odeint
+import matplotlib.pyplot as plt
 from bisect import bisect_left as bsearch
 from tqdm import tqdm
 a, b, c = 10, 2.667, 28
@@ -15,10 +16,9 @@ def lorenz(X, t, a, b, c):
     return x_dot, y_dot, z_dot
 
 def update_lorentz (key):
-    
-    key_bin = bin(int(key, 16))[2:].zfill(256) 
-    k={}                                       
-    key_32_parts=textwrap.wrap(key_bin, 8)     
+    key_bin = bin(int(key, 16))[2:].zfill(256)  #covert hex key digest to binary
+    k={}                                        #key dictionary
+    key_32_parts=textwrap.wrap(key_bin, 8)      #slicing key into 8 parts
     num=1
     for i in key_32_parts:
         k["k{0}".format(num)]=i
@@ -33,7 +33,7 @@ def update_lorentz (key):
     global x0 ,y0, z0
     x0=x0 + t1/256            
     y0=y0 + t2/256            
-    z0=z0 + t3/256
+    z0=z0 + t3/256   
 
 def gen_chaos_seq(m,n):
     global x0,y0,z0,a,b,c,N
@@ -70,3 +70,12 @@ def sequence_indexing(x,y,z):
             k2 = bsearch(seq, t)
             fz[k1]=k2
     return fx,fy,fz
+def plot(x,y,z):
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+    s = 100
+    c = np.linspace(0,1,N)
+    for i in range(0,N-s,s):
+        ax.plot(x[i:i+s+1], y[i:i+s+1], z[i:i+s+1], color=(1-c[i],c[i],1), alpha=0.4)
+    ax.set_axis_off()
+    plt.show()
