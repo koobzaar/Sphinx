@@ -4,7 +4,8 @@ Sphinx é um **crypter** de imagem colorida utilizando o **atractor de Lorenz** 
 
 
 ## Atractor de Lorenz
-<img src="https://clipground.com/images/attractor-clipart-3.jpg" alt="drawing" style="width:100px;height:100px"/>
+
+<img src="https://clipground.com/images/attractor-clipart-3.jpg" alt="drawing" style="width:400px;"/>
 
 O **atrator de Lorenz** é um conjunto de **pontos em um espaço tridimensional** que exibe um comportamento caótico. O conjunto de pontos é formado por trajetórias que oscilam em torno de duas asas simétricas e são atraídas para um ponto central denominado ponto fixo instável. O conjunto de pontos exibe uma estrutura fractal e possui propriedades interessantes, como a dependência sensível das condições iniciais e a existência de pontos críticos que dividem o atrator em regiões diferentes.
 
