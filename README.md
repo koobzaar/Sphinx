@@ -9,6 +9,12 @@ Sphinx é um **crypter de imagens colorida**s. Esse método utiliza o **atractor
 
 O **atrator de Lorenz** é um conjunto de **pontos em um espaço tridimensional** que exibe um comportamento caótico. O conjunto de pontos é formado por trajetórias que oscilam em torno de duas asas simétricas e são atraídas para um ponto central denominado ponto fixo instável. O conjunto de pontos exibe uma estrutura fractal e possui propriedades interessantes, como a dependência sensível das condições iniciais e a existência de pontos críticos que dividem o atrator em regiões diferentes.
 
+## Bases nitrogenadas
+
+<img src="https://i.imgur.com/41rAwPA.png" alt="drawing" style="width:600px;"/>
+
+As nucleobases, também conhecidas como bases nitrogenadas ou simplesmente bases, são compostos biológicos que contêm nitrogênio e formam nucleosídeos, que, por sua vez, são componentes de nucleotídeos. Todos esses monômeros constituem os blocos básicos de construção dos ácidos nucleicos. A capacidade das nucleobases de formar pares de base e empilhar uma sobre a outra leva diretamente à formação de estruturas helicoidais de cadeia longa, como o ácido ribonucleico (RNA) e o ácido desoxirribonucleico (DNA). Cinco nucleobases - adenina (A), citosina (C), guanina (G), timina (T) e uracila (U) - são chamadas de primárias ou canônicas.
+
 ## Funcionamento
 
 O Sphinx é um método de criptografia de **imagem** que utiliza operações de** codificação de DNA**, **caos espacial-temporal** e uma **chave única gerada a partir da imagem** que se deseja criptografar.
