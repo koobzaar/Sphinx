@@ -1,4 +1,5 @@
 
+
 # 🧬 Sphinx 
 
 <img src="https://i.imgur.com/s1vbBhe.png" align="right"
@@ -25,8 +26,34 @@ As **nucleobases**, também conhecidas como **bases nitrogenadas** ou **simplesm
 Todos esses monômeros constituem os blocos **básicos de construção dos ácidos nucleicos.** A capacidade das nucleobases de formar pares de base e empilhar uma sobre a outra leva diretamente à formação de estruturas helicoidais de cadeia longa, como o ácido ribonucleico (RNA) e o ácido desoxirribonucleico (DNA). Cinco nucleobases - adenina (A), citosina (C), guanina (G), timina (T) e uracila (U) - são chamadas de primárias ou canônicas.
 
 ## Como e porque utilizar bases nitrogenadas?
-
+### Por quê?
 O motivo para usar DNA para encriptar uma imagem é devido às propriedades únicas da Computação em DNA, tais como a **densidade de informação extraordinária**, o paralelismo maciço e o **consumo ultra baixo de energia**. Essas características permitem que o DNA seja usado como um meio para codificar e processar informações de forma **altamente eficiente e segura**. Além disso, a combinação de codificação de DNA com sistemas caóticos permite a criação de algoritmos de criptografia de imagem mais eficientes e seguros, já que a natureza **imprevisível** e aleatória dos sistemas caóticos pode ser utilizada para gerar chaves de criptografia mais robustas.
+### Como?
+Primeiro, é necessário transformar **cada valor de pixel RGB em binário**. 
+O processo de transformar valores RGB em binário é relativamente simples. Primeiramente, deve-se **converter cada valor RGB individualmente em binário**, o que resulta em **três sequências binárias de 8 bits cada**. Por exemplo, o valor **RGB (143, 234, 97)** seria convertido em binário como **(10001111, 11101010, 01100001**).
+
+Em seguida, para assimilar esses valores binários a uma base nitrogenada, é preciso agrupar os **8 bits de cada valor RGB em grupos de 2 bits**. Isso resulta em **quatro grupos de 2 bits para cada valor RGB**.
+
+Assim, o valor RGB (143, 234, 97) seria agrupado da seguinte forma:
+
+- **10001111** seria dividido em **4 grupos de 2 bits**: **10 00 11 11**
+- **11101010** seria dividido em **4 grupos de 2 bits**: **11 10 10 10**
+- **01100001** seria dividido em **4 grupos de 2 bits**: **01 10 00 01**
+
+A partir desses grupos de 2 bits, é possível **assimilar cada grupo a uma das quatro bases nitrogenadas**, sendo elas: Adenina ( A ), Timina ( T ), Citosina ( C ) e Guanina ( G ).
+
+Assim, considerando o binário **10001101** (10 00 11 01)
+- o grupo **10 seria assimilado à base A**
+- o grupo **00 seria assimilado à base T**
+- o grupo **11 seria assimilado à base C**
+- o grupo **01 seria assimilado à base G**
+
+Com isso, **teríamos a sequência de bases nitrogenadas correspondentes ao valor RGB (143, 234, 97).** 
+- 143 = 10001111 = 10 00 11 11 = A T C C = ATCC
+- 234 = 11101010 = 11 10 10 10 = C A A A = CAAA
+- 97 = 01100001 = 01 10 00 01 = G A T G = GATG
+
+**RGB (ATCC, CAAA, GATG).**
 
 ## Instalação e uso
 - Clone os arquivos deste repositório para uma pasta em seu computador
