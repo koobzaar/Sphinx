@@ -1,6 +1,6 @@
 
 
-# 🧬 Sphinx 
+# 🧬 Sphinx (Leia o aviso no final da página)
 
 <img src="https://i.imgur.com/s1vbBhe.png" align="right"
      alt="Size Limit logo by Anton Lovchikov" width="250" height="148">
@@ -97,3 +97,8 @@ This project was funded by **CPS (Centro Paula Souza)**.
 
  **Disclaimer:** 
  It is important to note that this project are of an academic nature and should not be interpreted as proven scientific facts.
+ 
+ # Aviso
+ NÃO UTILIZE esse algoritmo para criptografar imagens importantes ainda.
+ No momento, o código hash utilizado para decriptar a imagem não é seguro o suficiente, já que é gerado utilizando apenas as dimensões da imagem.
+ Posteriormente vou melhorar a segurança e retirar esse aviso.
