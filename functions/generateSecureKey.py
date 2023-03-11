@@ -20,7 +20,7 @@ def securekey(iname):
         x0 = logistic_map(x0,r) 
         random_seq.append(int(x0*255)) 
 
-    random_seq = np.array(random_seq).reshape(m,n,3) 
+    random_seq = np.array(random_seq).reshape(n,m,3) 
 
     encrypted_img = pix ^ random_seq 
 

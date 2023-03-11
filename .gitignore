@@ -132,3 +132,4 @@ dmypy.json
 encrypted_output/
 decrypter_output/
 graph.png
+images/

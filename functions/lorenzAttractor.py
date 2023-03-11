@@ -5,8 +5,10 @@ import matplotlib.pyplot as plt
 from bisect import bisect_left as bsearch
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.animation import FuncAnimation
+
+import numpy as np
+import matplotlib.pyplot as plt
+
 a, b, c = 10, 2.667, 28
 x0, y0, z0 = 0, 0, 0
 tmax, N = 100, 10000
