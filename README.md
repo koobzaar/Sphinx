@@ -29,7 +29,7 @@ Algumas **características** de sistemas dinâmicos caóticos, principalmente o 
 As **nucleobases**, também conhecidas como **bases nitrogenadas** ou **simplesmente bases**, são compostos biológicos que contêm nitrogênio e formam nucleosídeos, que, por sua vez, são componentes de nucleotídeos. 
 Todos esses monômeros constituem os blocos **básicos de construção dos ácidos nucleicos.** A capacidade das nucleobases de formar pares de base e empilhar uma sobre a outra leva diretamente à formação de estruturas helicoidais de cadeia longa, como o ácido ribonucleico (RNA) e o ácido desoxirribonucleico (DNA). Cinco nucleobases - adenina (A), citosina (C), guanina (G), timina (T) e uracila (U) - são chamadas de primárias ou canônicas.
 
-## Como e porque utilizar bases nitrogenadas?
+## Como e por que utilizar bases nitrogenadas?
 ### Por quê?
 O motivo para usar DNA para encriptar uma imagem é devido às propriedades únicas da Computação em DNA, tais como a **densidade de informação extraordinária**, o paralelismo maciço e o **consumo ultra baixo de energia**. Essas características permitem que o DNA seja usado como um meio para codificar e processar informações de forma **altamente eficiente e segura**. Além disso, a combinação de codificação de DNA com sistemas caóticos permite a criação de algoritmos de criptografia de imagem mais eficientes e seguros, já que a natureza **imprevisível** e aleatória dos sistemas caóticos pode ser utilizada para gerar chaves de criptografia mais robustas.
 ### Como?
