@@ -1,6 +1,6 @@
 
 
-# 🧬 Sphinx (Leia o aviso no final da página)
+# 🧬 Sphinx 
 
 <img src="https://i.imgur.com/s1vbBhe.png" align="right"
      alt="Size Limit logo by Anton Lovchikov" width="250" height="148">
@@ -8,6 +8,10 @@
 Sphinx é um **crypter de imagens coloridas**. Esse método utiliza o **atractor de Lorenz**, que é um **sistema dinâmico não linear** que descreve o comportamento do movimento de fluidos e gases, e as **bases nitrogenadas**, que são moléculas presentes no **DNA** e **RNA**. Ao combinar esses elementos, o Sphinx é capaz de transformar imagens em um formato codificado que só pode ser decifrado com a utilização da chave **RSA** correta. 
 
 **[INFO]** O atractor que está disponível à direita deste readme foi criado utilizando as coordenadas `x`, `y` e `z` geradas para encriptar a imagem `1477351899v6iQb.jpg`. Esse atractor é **ÚNICO** para essa imagem.
+
+
+<img src="https://s2.gifyu.com/images/ezgif-4-1103dc61c1.gif" alt="Size Limit logo by Anton Lovchikov" width="100%">
+
 
 Algumas **características** de sistemas dinâmicos caóticos, principalmente o **Atractor de Lorenz**, são:
 
@@ -98,7 +102,3 @@ This project was funded by **CPS (Centro Paula Souza)**.
  **Disclaimer:** 
  It is important to note that this project are of an academic nature and should not be interpreted as proven scientific facts.
  
- # Aviso
- NÃO UTILIZE esse algoritmo para criptografar imagens importantes ainda.
- No momento, o código hash utilizado para decriptar a imagem não é seguro o suficiente, já que é gerado utilizando apenas as dimensões da imagem.
- Posteriormente vou melhorar a segurança e retirar esse aviso.
