@@ -97,8 +97,6 @@ The author can be **contacted** through the email addresses [bruno.trigueiro@pro
 Also, you can contact me at:
 https://www.linkedin.com/in/brunotrigueiro/
 
-This project was funded by **CPS (Centro Paula Souza)**.
-
  **Disclaimer:** 
  It is important to note that this project are of an academic nature and should not be interpreted as proven scientific facts.
  
