@@ -83,7 +83,7 @@ Após selecionar e abrir a imagem, o processo de encriptação será iniciado. S
 **[ATENÇÃO]** Quando acabar a encriptação, será gerado uma chave Hash. Essa chave Hash é NECESSÁRIA para decriptar a imagem posteriormente.
 
 ### Decriptar uma imagem
-O processo de decriptar é praticamente igual ao de decriptar. Importe a imagem encriptada e insira a chave hash no terminal. A diferença é que você deve usar o decrypt.py:
+O processo de decriptar é praticamente igual ao de encriptar. Importe a imagem encriptada e insira a chave hash no terminal. A diferença é que você deve usar o decrypt.py:
 ```bash
 python decryptor.py
 ```
