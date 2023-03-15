@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from bisect import bisect_left as bsearch
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import datetime
 
 a, b, c = 10, 2.667, 28
 x0, y0, z0 = 0, 0, 0
@@ -17,7 +18,7 @@ def lorenz(X, t, a, b, c):
     z_dot = -b*z + x*y
     return x_dot, y_dot, z_dot
 
-def update_lorentz(key):
+def update_initial_parameters(key):
     if not isinstance(key, str):
         raise TypeError("key should be a string")
     if len(key) != 64:
@@ -43,23 +44,24 @@ def update_lorentz(key):
     z0 += t3 / 256
 
 
-def gen_chaos_seq(m, n):
-    if not isinstance(m, int) or not isinstance(n, int):
-        raise TypeError("m and n should be integers")
-    if m <= 0 or n <= 0:
-        raise ValueError("m and n should be positive integers")
-    global x0, y0, z0, a, b, c, N
-    N = m * n * 4
-    x = np.array((m, n * 4))
-    y = np.array((m, n * 4))
-    z = np.array((m, n * 4))
-    t = np.linspace(0, tmax, N)
-    f = odeint(lorenz, (x0, y0, z0), t, args=(a, b, c))
-    x, y, z = f.T
-    x = x[:(N)]
-    y = y[:(N)]
-    z = z[:(N)]
-    return x, y, z
+
+def generate_chaos_sequence(rows, columns):
+    if not isinstance(rows, int) or not isinstance(columns, int):
+        raise TypeError("rows and columns should be integers")
+    if rows <= 0 or columns <= 0:
+        raise ValueError("rows and columns should be positive integers")
+    global initial_x, initial_y, initial_z, a_coefficient, b_coefficient, c_coefficient, total_steps
+    total_steps = rows * columns * 4
+    x_array = np.array((rows, columns * 4))
+    y_array = np.array((rows, columns * 4))
+    z_array = np.array((rows, columns * 4))
+    time_array = np.linspace(0, tmax, total_steps)
+    result_array = odeint(lorenz, (x0, y0, z0), time_array, args=(a, b, c))
+    x_array, y_array, z_array = result_array.T
+    x_array = x_array[:(total_steps)]
+    y_array = y_array[:(total_steps)]
+    z_array = z_array[:(total_steps)]
+    return x_array, y_array, z_array
 
 def sequence_indexing(x, y, z):
     if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray) or not isinstance(z, np.ndarray):
@@ -90,6 +92,10 @@ def sequence_indexing(x, y, z):
         fz[k1] = k2
     return fx, fy, fz
 
+def get_filename_with_timestamp():
+    now = datetime.datetime.now()
+    return now.strftime("%d-%m-%Y_%H-%M")
+
 def plot(x, y, z):
     if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray) or not isinstance(z, np.ndarray):
         raise ValueError("All input parameters must be NumPy arrays")
@@ -116,4 +122,5 @@ def plot(x, y, z):
     ax.set_zlim(np.min(z), np.max(z))
     ax.set_aspect('equal')
     fig.patch.set_facecolor('black')
-    plt.savefig('graph2.png', transparent=True)
+    
+    plt.savefig(f'./chaotic_maps/{get_filename_with_timestamp()}_lorenz_graph.png', transparent=True)

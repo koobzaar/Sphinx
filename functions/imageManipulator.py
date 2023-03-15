@@ -1,10 +1,12 @@
 import tkinter as tk
 from tkinter import filedialog
 import cv2
-import time
 import pyperclip
 import numpy as np
 import os
+import datetime
+
+
 def select_image_path() -> str:
     """Returns the path to the selected image."""
     path = "NULL"
@@ -17,7 +19,7 @@ def select_image_path() -> str:
     else:
         print("[ERROR] An error has occurred while loading the image.")
     return path
-import datetime
+
 
 def get_filename_with_timestamp():
     now = datetime.datetime.now()
@@ -49,4 +51,4 @@ def save_decrypted_image(blue: list, green: list, red: list, p: int, q:int, orig
     img[:,:,1] = green
     img[:,:,2] = blue
     cv2.imwrite(("decrypter_output/"+os.path.basename(original_image_path).removesuffix('.png')+"_decrypted.png"), img)
-    print("[SUCCESS] Decrypted image saved as: " + str((os.path.basename(original_image_path)+"_decrypted.png")) + ".png in the 'decrypted_output' folder.")
+    print("[SUCCESS] Decrypted image saved as: " + str((os.path.basename(original_image_path)+"_decrypted.png")) + " in the 'decrypted_output' folder.")

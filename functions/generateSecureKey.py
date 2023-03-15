@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-
+import datetime
 
 def logistic_map(x, r):
     return r * x * (1 - x)
@@ -54,6 +54,9 @@ def securekey(iname):
     plot_logistic_map(x0, r, m * n * 3)
     return key
 
+def get_filename_with_timestamp():
+    now = datetime.datetime.now()
+    return now.strftime("%d-%m-%Y_%H-%M")
 
 def plot_logistic_map(x0, r, n):
     x = x0
@@ -69,5 +72,6 @@ def plot_logistic_map(x0, r, n):
     ax.set_xlabel("Iterations")
     ax.set_ylabel("Logistic Map Value")
     ax.set_title(f"Logistic Map with x0={x0} and r={r}")
-    plt.savefig("logistic_map.png")
+
+    plt.savefig(f'./logistic_maps/{get_filename_with_timestamp()}_lorenz_graph.png', dpi=300)
     plt.close(fig)
