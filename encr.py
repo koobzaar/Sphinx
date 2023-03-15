@@ -12,6 +12,7 @@ if (__name__ == "__main__"):
     showASCIIartHeader()
     selectedImagePath = select_image_path()
     encryptionKey, rows, columns = securekey(selectedImagePath)
+
     update_lorentz(encryptionKey)
     blueChannel, greenChannel, redChannel = decompose_matrix(selectedImagePath)
     encodedBlueChannel, encodedGreenChannel, encodedRedChannel = dna_encode(blueChannel, greenChannel, redChannel)
