@@ -1,7 +1,8 @@
 
 
-# 🧬 Sphinx 
-
+<img src="https://i.imgur.com/WKgapd6.jpg">
+<img src="https://img.shields.io/github/last-commit/koobzaar/sphinx?style=for-the-badge">
+<img src="https://img.shields.io/github/languages/code-size/koobzaar/sphinx?style=for-the-badge">
 <img src="https://i.imgur.com/s1vbBhe.png" align="right"
      alt="Size Limit logo by Anton Lovchikov" width="250" height="148">
 
@@ -75,7 +76,7 @@ pip install -r requirements.txt
 ### Encriptar uma imagem
 -  Rode o arquivo `encr.py` para encriptar uma imagem qualquer.
 ```bash
-python encr.py
+python encrypt.py
 ```
 Será aberto seu revelador de arquivos para você selecionar a imagem que você deseja encriptar.
 Após selecionar e abrir a imagem, o processo de encriptação será iniciado. Sua imagem encriptada pode ser encontrada posteriormente na pasta `./encrypted_output`.
@@ -85,7 +86,7 @@ Após selecionar e abrir a imagem, o processo de encriptação será iniciado. S
 ### Decriptar uma imagem
 O processo de decriptar é praticamente igual ao de encriptar. Importe a imagem encriptada e insira a chave hash no terminal. A diferença é que você deve usar o decrypt.py:
 ```bash
-python decryptor.py
+python decrypt.py
 ```
 
 # Créditos
