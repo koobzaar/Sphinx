@@ -73,5 +73,5 @@ def plot_logistic_map(x0, r, n):
     ax.set_ylabel("Logistic Map Value")
     ax.set_title(f"Logistic Map with x0={x0} and r={r}")
 
-    plt.savefig(f'./logistic_maps/{get_filename_with_timestamp()}_lorenz_graph.png', dpi=300)
+    plt.savefig(f'./logistic_maps/{get_filename_with_timestamp()}_lorenz_graph.svg', dpi=300, format='svg')
     plt.close(fig)

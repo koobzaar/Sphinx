@@ -105,7 +105,7 @@ def plot(x, y, z):
         raise ValueError("All input arrays must have a numerical data type")
     
     fig = plt.figure()
-    fig = plt.figure(figsize=(50, 50), dpi=400)
+    fig = plt.figure(figsize=(20, 20), dpi=400)
     ax = fig.add_subplot(111, projection='3d')
     s = 10
     N = len(x)
@@ -114,13 +114,12 @@ def plot(x, y, z):
         ax.plot(x[i:i + s + 1], y[i:i + s + 1], z[i:i + s + 1], color=(1 - c[i], c[i], 1), alpha=0.4)
     ax.set_axis_off()
     ax.set_facecolor('black')
-    ax.azim = -20   # z rotation (default=270)
-    ax.elev = 0    # x rotation (default=0)
+    ax.elev = -20    # x rotation (default=0)
+    ax.azim = 0   # z rotation (default=270)
     ax.dist = 7.5    # define perspective (default=10)
     ax.set_xlim(np.min(x), np.max(x))
     ax.set_ylim(np.min(y), np.max(y))
     ax.set_zlim(np.min(z), np.max(z))
     ax.set_aspect('equal')
     fig.patch.set_facecolor('black')
-    
-    plt.savefig(f'./chaotic_maps/{get_filename_with_timestamp()}_lorenz_graph.png', transparent=True)
+    plt.savefig(f'./chaotic_maps/{get_filename_with_timestamp()}_{i}_lorenz_graph.svg', transparent=True, format="svg")
