@@ -11,7 +11,7 @@ Sphinx é um **crypter de imagens coloridas**. Esse método utiliza o **atractor
 **[INFO]** O atractor que está disponível à direita deste readme foi criado utilizando as coordenadas `x`, `y` e `z` geradas para encriptar a imagem `1477351899v6iQb.jpg`. Esse atractor é **ÚNICO** para essa imagem.
 
 
-<img src="https://s2.gifyu.com/images/ezgif-4-1103dc61c1.gif" alt="Size Limit logo by Anton Lovchikov" width="100%">
+<img src="https://i.imgur.com/gEuO1gw.jpg" alt="Size Limit logo by Anton Lovchikov" width="100%">
 
 
 Algumas **características** de sistemas dinâmicos caóticos, principalmente o **Atractor de Lorenz**, são:
