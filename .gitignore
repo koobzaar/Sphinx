@@ -6,7 +6,12 @@ __pycache__/
 
 # C extensions
 *.so
-
+encrypted_output/
+decrypted_output/
+logistic_maps/
+lorenz_attractor_graphs/
+images/
+chaotic_maps/
 # Distribution / packaging
 .Python
 build/
