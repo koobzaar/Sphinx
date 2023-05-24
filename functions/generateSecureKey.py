@@ -4,7 +4,7 @@ import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import datetime
-
+import os
 def logistic_map(x, r):
     return r * x * (1 - x)
 
@@ -29,9 +29,24 @@ def generate_key_and_dimensions(encrypted_img):
     key.update(encrypted_img)
     return key.hexdigest(), *encrypted_img.shape[:2]
 
+def convert_to_jpg(image_path):
+    # Open the image
+    with Image.open(image_path) as img:
+        # Convert to RGB if necessary
+        if img.mode != "RGB":
+            print("────█ Converting image to RGB...")
+            img = img.convert("RGB")
+        # Get the file name and extension
+        file_name, file_ext = os.path.splitext(image_path)
+        # Save as JPEG
+        jpg_path = file_name + ".jpg"
+        img.save(jpg_path, "JPEG")
+        # Open the JPEG and return as PIL Image object
+        with Image.open(jpg_path) as jpg_img:
+            return jpg_img.copy()
 
-def securekey(iname):
-    img = Image.open(iname)
+def securekey(iname, plot):
+    img = convert_to_jpg(image_path=iname)
     pix = np.array(img)
     x0 = input("────█ Enter x0 (press enter to use default value of 0.5): ")
     if x0 == "":
@@ -51,7 +66,8 @@ def securekey(iname):
     encrypted_img = encrypt_image(pix, random_seq)
     key = generate_key_and_dimensions(encrypted_img)
     m, n, _ = pix.shape
-    plot_logistic_map(x0, r, m * n * 3)
+    if(plot):
+        plot_logistic_map(x0, r, m * n * 3)
     return key
 
 def get_filename_with_timestamp():

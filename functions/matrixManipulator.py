@@ -6,7 +6,7 @@ def split_into_rgb_channels(image):
   red = image[:,:,2]
   green = image[:,:,1]
   blue = image[:,:,0]
-  return red, green, blue
+  return blue, green, red
 
 def decompose_matrix(iname):
     image = cv2.imread(iname)
