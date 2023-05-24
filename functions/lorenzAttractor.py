@@ -10,6 +10,7 @@ from tqdm import tqdm
 from typing import List, Tuple
 import textwrap
 import os
+
 class ChaoticMap(ABC):
     @abstractmethod
     def generate_sequence(self, rows: int, columns: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:

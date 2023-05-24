@@ -5,6 +5,10 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import datetime
 import os
+import subprocess
+from dotenv import dotenv_values
+import json
+
 def logistic_map(x, r):
     return r * x * (1 - x)
 
@@ -13,28 +17,55 @@ def generate_random_seq(shape, x0, r):
     m, n, _ = shape
     random_seq = []
 
-    for i in tqdm(range(m * n * 3), desc="──█ Generating the hash key using the original pixels of the image and a logistic map..."):
+    for i in tqdm(range(m * n * 3), desc="[PRIVATE KEY] ──█ Generating the hash key using the original pixels of the image and a logistic map..."):
         x0 = logistic_map(x0, r)
         random_seq.append(int(x0 * 255))
 
     return np.array(random_seq).reshape(shape)
 
 
-def encrypt_image(pix, random_seq):
+def xor_image(pix, random_seq):
     return pix ^ random_seq
 
+
+def get_big_hex16_number(array_length):
+    env_vars = dotenv_values(".env")
+    api_key = env_vars["API_KEY"]
+    api_url = "https://api.quantumnumbers.anu.edu.au"
+    data_type = "hex16"
+    block_size = "4"
+    curl_command = f'curl -X GET -H "x-api-key:{api_key}" "{api_url}?length={array_length}&type={data_type}&size={block_size}"'
+    print("[PRIVATE KEY] ────█ Generating a random sequence of quantum random numbers using the Australian National University API...\n────█ This may take a while.\n")
+    result = subprocess.check_output(curl_command, shell=True)
+    result_json = json.loads(result)
+    if(result_json["success"] == False):
+        print("\n\n[PRIVATE KEY] ────█ Australian National University returned an error on their API. The process cannot be completed.")
+        print(result_json["message"])
+        exit(1)
+    else:
+        print("\n\n[PRIVATE KEY] Quantum random numbers generated successfully.")
+    return result_json["data"]
 
 def generate_key_and_dimensions(encrypted_img):
     key = hashlib.sha256()
     key.update(encrypted_img)
-    return key.hexdigest(), *encrypted_img.shape[:2]
+    random_numbers = get_big_hex16_number(len(key.hexdigest()))
+    # Concatenate the random numbers into a single string
+    random_numbers = "".join(random_numbers)
+    # Convert the string to bytes
+    random_numbers = bytes.fromhex(random_numbers)
+    # Convert the key to bytes
+    key = bytes.fromhex(key.hexdigest())
+    # Merge the key and the random numbers
+    merged_bytes = bytes([a ^ b for a, b in zip(key, random_numbers)])
+    return merged_bytes.hex(), *encrypted_img.shape[:2]
 
 def convert_to_jpg(image_path):
     # Open the image
     with Image.open(image_path) as img:
         # Convert to RGB if necessary
         if img.mode != "RGB":
-            print("────█ Converting image to RGB...")
+            print("[PRIVATE KEY] ────█ Converting image to RGB...")
             img = img.convert("RGB")
         # Get the file name and extension
         file_name, file_ext = os.path.splitext(image_path)
@@ -48,27 +79,31 @@ def convert_to_jpg(image_path):
 def securekey(iname, plot):
     img = convert_to_jpg(image_path=iname)
     pix = np.array(img)
-    x0 = input("────█ Enter x0 (press enter to use default value of 0.5): ")
+    x0 = input("[PRIVATE KEY] ────█ Enter x0 (press enter to use default value of 0.5): ")
     if x0 == "":
         x0 = 0.5
-        print("──█ Using default value of x0 = 0.5")
+        print("[PRIVATE KEY] ──█ Using default value of x0 = 0.5")
     else:
         x0 = float(x0)
-        print(f"────█ Using x0 = {x0}")
-    r = input("────█ Enter r (press enter to use default value of 3.9): ")
+        print(f"[PRIVATE KEY] ────█ Using x0 = {x0}")
+    r = input("[PRIVATE KEY] ────█ Enter r (press enter to use default value of 3.9): ")
     if r == "":
         r = 3.9
-        print("──█ Using default value of r = 3.9")
+        print("[PRIVATE KEY] ──█ Using default value of r = 3.9")
     else:
         r = float(r)
-        print(f"────█ Using r = {r}")
+        print(f"[PRIVATE KEY] ────█ Using r = {r}")
     random_seq = generate_random_seq(pix.shape, x0, r)
-    encrypted_img = encrypt_image(pix, random_seq)
+    encrypted_img = xor_image(pix, random_seq)
     key = generate_key_and_dimensions(encrypted_img)
     m, n, _ = pix.shape
     if(plot):
         plot_logistic_map(x0, r, m * n * 3)
+    print(key)
     return key
+
+
+
 
 def get_filename_with_timestamp():
     now = datetime.datetime.now()
@@ -79,7 +114,7 @@ def plot_logistic_map(x0, r, n):
     iterations = n
     logistic_map_values = []
 
-    for i in tqdm(range(iterations), desc="────█ Plotting logistic map..."):
+    for i in tqdm(range(iterations), desc="[PRIVATE KEY] ────█ Plotting logistic map..."):
         logistic_map_values.append(x)
         x = logistic_map(x, r)
 

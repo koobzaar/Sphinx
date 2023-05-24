@@ -23,31 +23,22 @@ def select_image_path() -> str:
 
 def get_filename_with_timestamp():
     now = datetime.datetime.now()
-    return now.strftime("%d-%m-%Y_%H-%M-%S")
+    date_str = now.strftime("%Y-%m-%d")
+    time_str = now.strftime("%H-%M-%S")
+    return f"encrypted_image_{date_str}_{time_str}"
 
-import os
 
 def save_encrypted_image(b: list, g: list, r: list, image_path: str, hash_key: str):
-    """Encrypts the image and saves it as a PNG file in the 'encrypted_output' folder.
-    
-    Args:
-    - b: list representing the blue channel
-    - g: list representing the green channel
-    - r: list representing the red channel
-    - image_path: string representing the path to the original image
-    - hash_key: string representing the hash key
-    """
     img = cv2.imread(image_path)
-    img[:, :, 2] = r
-    img[:, :, 1] = g
-    img[:, :, 0] = b
+    img[:, :, 0], img[:, :, 1], img[:, :, 2] = b, g, r
     output_folder = "./encrypted_output/"
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-    fileName = get_filename_with_timestamp()
-    cv2.imwrite((output_folder + fileName + ".png"), img)
-    print("[SUCCESS] Encrypted image saved as: " + fileName + ".png in the 'encrypted_output' folder.\n[INFO] The hash key (required to decrypt) was saved to your clipboard.\n[INFO] Your hash key is: " + hash_key)
+    os.makedirs(output_folder, exist_ok=True)
+    file_name = get_filename_with_timestamp()
+    cv2.imwrite(f"{output_folder}{file_name}.png", img)
+    print(f"[SUCCESS] Encrypted image saved as: {file_name}.png in the 'encrypted_output' folder.")
     pyperclip.copy(hash_key)
+    print(f"[INFO] The hash key (required to decrypt) was saved to your clipboard.\n[INFO] Your hash key is: {hash_key}")
+
 
 def save_decrypted_image(blue: list, green: list, red: list, p: int, q:int, original_image_path: str):
     green,red = red, green
