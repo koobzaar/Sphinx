@@ -35,9 +35,15 @@ def save_encrypted_image(b: list, g: list, r: list, image_path: str, hash_key: s
     os.makedirs(output_folder, exist_ok=True)
     file_name = get_filename_with_timestamp()
     cv2.imwrite(f"{output_folder}{file_name}.png", img)
-    print(f"[SUCCESS] Encrypted image saved as: {file_name}.png in the 'encrypted_output' folder.")
-    pyperclip.copy(hash_key)
-    print(f"[INFO] The hash key (required to decrypt) was saved to your clipboard.\n[INFO] Your hash key is: {hash_key}")
+    print(f"\n\n[SUCCESS] Encrypted image saved as: {file_name}.png in the 'encrypted_output' folder.")
+    pyperclip.copy(hash_key.replace(hash_key, '*'*len(hash_key)))
+    show_hash_key = input("[INFO] Do you want to show the hash key? (y/n) [default: n]: ")
+    if show_hash_key.lower() == 'y':
+        print(f"[INFO] Your hash key is: {hash_key}")
+        print("[INFO] The hash key (required to decrypt) was saved to your clipboard.")
+    elif show_hash_key == '':
+        print("[INFO] The hash key (required to decrypt) was saved to your clipboard.")
+    # END: ed8c6549bwf9
 
 
 def save_decrypted_image(blue: list, green: list, red: list, p: int, q:int, original_image_path: str):

@@ -10,6 +10,7 @@ from functions.console import *
 
 parser = argparse.ArgumentParser(description="Encrypt an image using the Lorenz Attractor and DNA encoding.")
 parser.add_argument('--plot', action='store_true', help="Plot the Lorenz Attractor.");
+parser.add_argument('--offline' , action='store_true', help="Run the program in offline mode. This will not prompt the user to select an image and will instead use the default image.")
 if (__name__ == "__main__"):
     args = parser.parse_args()
     cls()
@@ -19,10 +20,9 @@ if (__name__ == "__main__"):
     dna_decoder = DnaDecoder()
     key_matrix_encoder = KeyMatrixEncoder()
     xor_operator = XorOperation()
-    #self, a: float = 10, b: float = 2.667, c: float = 28, x0: float = 0, y0: float = 0, z0: float = 0, tmax: float = 100) -> None:
     show_ascii_art_header()
     selectedImagePath = select_image_path()
-    encryptionKey, rows, columns = securekey(selectedImagePath, args.plot)
+    encryptionKey, rows, columns = securekey(selectedImagePath, args.plot, args.offline)
 
     # Update the LorenzMap object's initial parameters with the encryption key
     lorenz_map.update_initial_parameters(encryptionKey)
@@ -33,8 +33,8 @@ if (__name__ == "__main__"):
     encodedKeyMatrix = key_matrix_encoder.encode(encryptionKey, blueChannel)
     finalBlueChannel, finalGreenChannel, finalRedChannel = xor_operator.apply(encodedBlueChannel, encodedGreenChannel, encodedRedChannel, encodedKeyMatrix)
     chaosSeqX, chaosSeqY, chaosSeqZ = lorenz_map.generate_sequence(rows, columns)
-    # if args.plot:
-    #     lorenz_map.plot_sequence(chaosSeqX, chaosSeqY, chaosSeqZ)
+    if args.plot:
+        lorenz_map.plot_sequence(chaosSeqX, chaosSeqY, chaosSeqZ)
     indexedSeqX, indexedSeqY, indexedSeqZ = lorenz_map.index_sequence(chaosSeqX, chaosSeqY, chaosSeqZ)
 
     # Scramble the encoded channels using the indexed chaotic sequence

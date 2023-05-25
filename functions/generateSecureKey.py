@@ -8,7 +8,8 @@ import os
 import subprocess
 from dotenv import dotenv_values
 import json
-
+import secrets
+from .console import show_ANU_logo
 def logistic_map(x, r):
     return r * x * (1 - x)
 
@@ -17,7 +18,7 @@ def generate_random_seq(shape, x0, r):
     m, n, _ = shape
     random_seq = []
 
-    for i in tqdm(range(m * n * 3), desc="[PRIVATE KEY] ──█ Generating the hash key using the original pixels of the image and a logistic map..."):
+    for i in tqdm(range(m * n * 3), desc="[PRIVATE KEY] ──█ Generating a random sequence of numbers using the logistic map."):
         x0 = logistic_map(x0, r)
         random_seq.append(int(x0 * 255))
 
@@ -28,28 +29,36 @@ def xor_image(pix, random_seq):
     return pix ^ random_seq
 
 
-def get_big_hex16_number(array_length):
-    env_vars = dotenv_values(".env")
-    api_key = env_vars["API_KEY"]
-    api_url = "https://api.quantumnumbers.anu.edu.au"
-    data_type = "hex16"
-    block_size = "4"
-    curl_command = f'curl -X GET -H "x-api-key:{api_key}" "{api_url}?length={array_length}&type={data_type}&size={block_size}"'
-    print("[PRIVATE KEY] ────█ Generating a random sequence of quantum random numbers using the Australian National University API...\n────█ This may take a while.\n")
-    result = subprocess.check_output(curl_command, shell=True)
-    result_json = json.loads(result)
-    if(result_json["success"] == False):
-        print("\n\n[PRIVATE KEY] ────█ Australian National University returned an error on their API. The process cannot be completed.")
-        print(result_json["message"])
-        exit(1)
+def get_big_hex16_number(array_length,offline):
+    if(offline):
+        print("\n\n[XXXXXXXXX]> [OFFLINE MODE] | ───█  - using Python's secrets module to generate a random sequence of numbers.")
+        result = secrets.token_hex(array_length)
+        result_json = {"success": True, "data": result}   
+        print("[XXXXXXXXX]> [OFFLINE MODE] | ───█  -  The sequence of quantum random numbers has been generated.\n\n") 
     else:
-        print("\n\n[PRIVATE KEY] Quantum random numbers generated successfully.")
+        print("\n\n[OOOOOOOO]> [ONLINE MODE] | ───█  - using the Australian National University API to generate a random sequence of numbers.")
+        show_ANU_logo()
+        env_vars = dotenv_values(".env")
+        api_key = env_vars["API_KEY"]
+        api_url = "https://api.quantumnumbers.anu.edu.au"
+        data_type = "hex16"
+        block_size = "4"
+        print("\n\n[OOOOOOOO]> [ONLINE MODE] | ───█  - connecting...")
+        # curl_command = f'curl -X GET -H "x-api-key:{api_key}" "{api_url}?length={array_length}&type={data_type}&size={block_size}"'
+        result = subprocess.check_output(curl_command, shell=True)
+        result_json = json.loads(result)
+        if(result_json["success"] == False):
+            print("\n\n[ERROR] ────█ Australian National University returned an error on their API. The process cannot be completed.")
+            print(result_json["message"])
+            exit(1)
+        else:
+            print("\n[OOOOOOOO]> [ONLINE MODE] | ───█  - Quantum random numbers generated successfully.\n\n")
     return result_json["data"]
 
-def generate_key_and_dimensions(encrypted_img):
+def generate_key_and_dimensions(encrypted_img, offline):
     key = hashlib.sha256()
     key.update(encrypted_img)
-    random_numbers = get_big_hex16_number(len(key.hexdigest()))
+    random_numbers = get_big_hex16_number(len(key.hexdigest()), offline)
     # Concatenate the random numbers into a single string
     random_numbers = "".join(random_numbers)
     # Convert the string to bytes
@@ -76,7 +85,7 @@ def convert_to_jpg(image_path):
         with Image.open(jpg_path) as jpg_img:
             return jpg_img.copy()
 
-def securekey(iname, plot):
+def securekey(iname, plot, offline):
     img = convert_to_jpg(image_path=iname)
     pix = np.array(img)
     x0 = input("[PRIVATE KEY] ────█ Enter x0 (press enter to use default value of 0.5): ")
@@ -95,11 +104,10 @@ def securekey(iname, plot):
         print(f"[PRIVATE KEY] ────█ Using r = {r}")
     random_seq = generate_random_seq(pix.shape, x0, r)
     encrypted_img = xor_image(pix, random_seq)
-    key = generate_key_and_dimensions(encrypted_img)
+    key = generate_key_and_dimensions(encrypted_img, offline)
     m, n, _ = pix.shape
     if(plot):
         plot_logistic_map(x0, r, m * n * 3)
-    print(key)
     return key
 
 
