@@ -1,12 +1,7 @@
 import hashlib
-from PIL import Image
 import numpy as np
-from tqdm import tqdm
-import matplotlib.pyplot as plt
-import datetime
 import os
 import subprocess
-from dotenv import dotenv_values
 import json
 import secrets
 from .console import show_ANU_logo
@@ -44,7 +39,7 @@ def get_big_hex16_number(array_length,offline):
         data_type = "hex16"
         block_size = "4"
         print("\n\n[OOOOOOOO]> [ONLINE MODE] | ───█  - connecting...")
-        # curl_command = f'curl -X GET -H "x-api-key:{api_key}" "{api_url}?length={array_length}&type={data_type}&size={block_size}"'
+        curl_command = f'curl -X GET -H "x-api-key:{api_key}" "{api_url}?length={array_length}&type={data_type}&size={block_size}"'
         result = subprocess.check_output(curl_command, shell=True)
         result_json = json.loads(result)
         if(result_json["success"] == False):
