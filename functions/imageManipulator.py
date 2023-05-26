@@ -36,7 +36,7 @@ def save_encrypted_image(b: list, g: list, r: list, image_path: str, hash_key: s
     file_name = get_filename_with_timestamp()
     cv2.imwrite(f"{output_folder}{file_name}.png", img)
     print(f"\n\n[SUCCESS] Encrypted image saved as: {file_name}.png in the 'encrypted_output' folder.")
-    pyperclip.copy(hash_key.replace(hash_key, '*'*len(hash_key)))
+    pyperclip.copy(hash_key)
     show_hash_key = input("[INFO] Do you want to show the hash key? (y/n) [default: n]: ")
     if show_hash_key.lower() == 'y':
         print(f"[INFO] Your hash key is: {hash_key}")

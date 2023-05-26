@@ -1,7 +1,12 @@
 import hashlib
+from PIL import Image
 import numpy as np
+from tqdm import tqdm
+import matplotlib.pyplot as plt
+import datetime
 import os
 import subprocess
+from dotenv import dotenv_values
 import json
 import secrets
 from .console import show_ANU_logo
