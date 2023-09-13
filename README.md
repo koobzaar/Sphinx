@@ -6,7 +6,7 @@
 <img src="https://i.imgur.com/s1vbBhe.png" align="right"
      alt="Size Limit logo by Anton Lovchikov" width="250" height="148">
 
-Sphinx é uma demonstração de como usar **mapas caóticos e DNA** para encriptar arquivos de imagem. O objetivo é criar uma chave segura e aleatória que possa ser usada para cifrar e decifrar uma imagem usando uma operação XOR. A chave é gerada usando uma combinação do mapa logístico, um gerador de números aleatórios quânticos e o mapa de Lorenz. A chave é então codificada em uma sequência de nucleotídeos que representa DNA.
+Sphinx é uma demonstração de como usar mapas caóticos e DNA para encriptar arquivos de imagem. O projeto usa uma combinação do mapa logístico, um gerador de números aleatórios quânticos e o mapa de Lorenz para gerar uma chave segura e aleatória, que é então codificada em uma sequência de nucleotídeos que representa DNA. A chave é usada para encriptar uma imagem usando uma operação XOR. O projeto pode ter várias aplicações potenciais, como criptografia de dados, esteganografia ou biologia computacional. O projeto também ilustra a conexão entre a matemática, a física e a biologia, e como elas podem ser usadas para criar sistemas complexos e criativos.
 
 **[INFO]** O atractor que está disponível à direita deste readme foi criado utilizando as coordenadas `x`, `y` e `z` geradas para encriptar a imagem `1477351899v6iQb.jpg`. Esse atractor é **ÚNICO** para essa imagem.
 
@@ -15,8 +15,6 @@ Sphinx é uma demonstração de como usar **mapas caóticos e DNA** para encript
 
 
 Algumas **características** de sistemas dinâmicos caóticos, principalmente o **Atractor de Lorenz**, são:
-
-Algumas características desse método de criptografia são:
 
 - **Mapas caóticos para gerar números aleatórios que são difíceis de prever ou reproduzir**: os mapas caóticos são funções matemáticas que produzem resultados imprevisíveis e sensíveis às condições iniciais. Um exemplo de mapa caótico é o mapa logístico, que é usado neste projeto.
 - **Gerador de números aleatórios quânticos para adicionar mais entropia e segurança à chave**: o gerador de números aleatórios quânticos é um serviço online que fornece números aleatórios baseados em fenômenos quânticos, como o decaimento radioativo ou a polarização de fótons.
@@ -61,8 +59,6 @@ O processo de decriptar é praticamente igual ao de encriptar. Importe a imagem 
 ```bash
 python decrypt.py
 ```
-## Conclusão
-O projeto é uma demonstração de como usar mapas caóticos e DNA para encriptar arquivos de imagem. O projeto usa uma combinação do mapa logístico, um gerador de números aleatórios quânticos e o mapa de Lorenz para gerar uma chave segura e aleatória, que é então codificada em uma sequência de nucleotídeos que representa DNA. A chave é usada para encriptar uma imagem usando uma operação XOR. O projeto pode ter várias aplicações potenciais, como criptografia de dados, esteganografia ou biologia computacional. O projeto também ilustra a conexão entre a matemática, a física e a biologia, e como elas podem ser usadas para criar sistemas complexos e criativos.
 
 # Créditos
 The author of this project is **Bruno Bezerra Trigueiro**, currently affiliated with the **São Paulo State Technological College (FATEC)**. 
