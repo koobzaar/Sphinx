@@ -6,7 +6,7 @@
 <img src="https://i.imgur.com/s1vbBhe.png" align="right"
      alt="Size Limit logo by Anton Lovchikov" width="250" height="148">
 
-Sphinx é um **crypter de imagens coloridas**. Esse método utiliza o **atractor de Lorenz**, que é um **sistema dinâmico não linear** que descreve o comportamento do movimento de fluidos e gases, e as **bases nitrogenadas**, que são moléculas presentes no **DNA** e **RNA**. Ao combinar esses elementos, o Sphinx é capaz de transformar imagens em um formato codificado que só pode ser decifrado com a utilização da chave **RSA** correta. 
+Sphinx é uma demonstração de como usar **mapas caóticos e DNA** para encriptar arquivos de imagem. O objetivo é criar uma chave segura e aleatória que possa ser usada para cifrar e decifrar uma imagem usando uma operação XOR. A chave é gerada usando uma combinação do mapa logístico, um gerador de números aleatórios quânticos e o mapa de Lorenz. A chave é então codificada em uma sequência de nucleotídeos que representa DNA.
 
 **[INFO]** O atractor que está disponível à direita deste readme foi criado utilizando as coordenadas `x`, `y` e `z` geradas para encriptar a imagem `1477351899v6iQb.jpg`. Esse atractor é **ÚNICO** para essa imagem.
 
@@ -16,50 +16,23 @@ Sphinx é um **crypter de imagens coloridas**. Esse método utiliza o **atractor
 
 Algumas **características** de sistemas dinâmicos caóticos, principalmente o **Atractor de Lorenz**, são:
 
-- **Sensibilidade às condições iniciais**: *pequenas variações* nas condições iniciais podem levar a grandes diferenças nos resultados.
-- **Ciclos atratores**: os sistemas caóticos podem apresentar ciclos atratores complexos, muitas vezes fractais, que podem ser difíceis de prever ou entender.    
-- **Não periódicos**: ao contrário dos sistemas periódicos, os sistemas caóticos não apresentam padrões repetitivos ou previsíveis.
-    
-- **Dinâmica caótica**: os sistemas caóticos são caracterizados por uma dinâmica complexa e não linear, que pode ser difícil de modelar ou entender matematicamente.
+Algumas características desse método de criptografia são:
 
-## Bases nitrogenadas
+- **Mapas caóticos para gerar números aleatórios que são difíceis de prever ou reproduzir**: os mapas caóticos são funções matemáticas que produzem resultados imprevisíveis e sensíveis às condições iniciais. Um exemplo de mapa caótico é o mapa logístico, que é usado neste projeto.
+- **Gerador de números aleatórios quânticos para adicionar mais entropia e segurança à chave**: o gerador de números aleatórios quânticos é um serviço online que fornece números aleatórios baseados em fenômenos quânticos, como o decaimento radioativo ou a polarização de fótons.
+- **Attractor de Lorenz para aumentar a complexidade e a imprevisibilidade da chave**: o mapa de Lorenz é um sistema de equações diferenciais que descreve o comportamento caótico de um fluido. O mapa de Lorenz produz uma sequência de pontos que formam um padrão tridimensional chamado atrator de Lorenz.
+- DNA como uma forma de codificar a chave em uma sequência de nucleotídeos.
+  
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/1/16/DNA_orbit_animated.gif" align="left"
-     alt="Size Limit logo by Anton Lovchikov" width="70" height="108">
+## Metodologias
 
-As **nucleobases**, também conhecidas como **bases nitrogenadas** ou **simplesmente bases**, são compostos biológicos que contêm nitrogênio e formam nucleosídeos, que, por sua vez, são componentes de nucleotídeos. 
-Todos esses monômeros constituem os blocos **básicos de construção dos ácidos nucleicos.** A capacidade das nucleobases de formar pares de base e empilhar uma sobre a outra leva diretamente à formação de estruturas helicoidais de cadeia longa, como o ácido ribonucleico (RNA) e o ácido desoxirribonucleico (DNA). Cinco nucleobases - adenina (A), citosina (C), guanina (G), timina (T) e uracila (U) - são chamadas de primárias ou canônicas.
+O projeto consiste em quatro módulos principais: `generateSecureKey.py`, `lorenzAttractor.py`, `matrixDNAManipulator.py` e `matrixManipulator.py`. Cada módulo contém várias funções e classes que são usadas para realizar as seguintes etapas:
 
-## Como e por que utilizar bases nitrogenadas?
-### Por quê?
-O motivo para usar DNA para encriptar uma imagem é devido às propriedades únicas da Computação em DNA, tais como a **densidade de informação extraordinária**, o paralelismo maciço e o **consumo ultra baixo de energia**. Essas características permitem que o DNA seja usado como um meio para codificar e processar informações de forma **altamente eficiente e segura**. Além disso, a combinação de codificação de DNA com sistemas caóticos permite a criação de algoritmos de criptografia de imagem mais eficientes e seguros, já que a natureza **imprevisível** e aleatória dos sistemas caóticos pode ser utilizada para gerar chaves de criptografia mais robustas.
-### Como?
-Primeiro, é necessário transformar **cada valor de pixel RGB em binário**. 
-O processo de transformar valores RGB em binário é relativamente simples. Primeiramente, deve-se **converter cada valor RGB individualmente em binário**, o que resulta em **três sequências binárias de 8 bits cada**. Por exemplo, o valor **RGB (143, 234, 97)** seria convertido em binário como **(10001111, 11101010, 01100001**).
-
-Em seguida, para assimilar esses valores binários a uma base nitrogenada, é preciso agrupar os **8 bits de cada valor RGB em grupos de 2 bits**. Isso resulta em **quatro grupos de 2 bits para cada valor RGB**.
-
-Assim, o valor RGB (143, 234, 97) seria agrupado da seguinte forma:
-
-- **10001111** seria dividido em **4 grupos de 2 bits**: **10 00 11 11**
-- **11101010** seria dividido em **4 grupos de 2 bits**: **11 10 10 10**
-- **01100001** seria dividido em **4 grupos de 2 bits**: **01 10 00 01**
-
-A partir desses grupos de 2 bits, é possível **assimilar cada grupo a uma das quatro bases nitrogenadas**, sendo elas: Adenina ( A ), Timina ( T ), Citosina ( C ) e Guanina ( G ).
-
-Assim, considerando o binário **10001101** (10 00 11 01)
-- o grupo **10 seria assimilado à base A**
-- o grupo **00 seria assimilado à base T**
-- o grupo **11 seria assimilado à base C**
-- o grupo **01 seria assimilado à base G**
-
-Com isso, **teríamos a sequência de bases nitrogenadas correspondentes ao valor RGB (143, 234, 97).** 
-- 143 = 10001111 = 10 00 11 11 = A T C C = ATCC
-- 234 = 11101010 = 11 10 10 10 = C A A A = CAAA
-- 97 = 01100001 = 01 10 00 01 = G A T G = GATG
-
-**RGB (ATCC, CAAA, GATG).**
-
+- Gerar uma chave segura e aleatória usando o mapa logístico e um gerador de números aleatórios quânticos. O mapa logístico é uma função matemática que produz uma sequência de números aleatórios entre 0 e 1, dependendo dos parâmetros x e r. O gerador de números aleatórios quânticos é um serviço online que fornece números aleatórios baseados em fenômenos quânticos. A chave é formada pela concatenação dos números gerados pelo mapa logístico e pelo gerador quântico.
+- Gerar uma sequência de pontos no mapa de Lorenz, que é um sistema de equações diferenciais que descreve o comportamento caótico de um fluido. O mapa de Lorenz é usado para adicionar mais complexidade e imprevisibilidade à chave. A sequência de pontos é obtida usando a função odeint da biblioteca scipy, que resolve numericamente as equações do mapa de Lorenz.
+- Codificar a chave em uma sequência de nucleotídeos que representa DNA. Cada número da chave é convertido em um valor binário, que é então mapeado para um nucleotídeo (A, T, C ou G) usando um dicionário pré-definido. A sequência resultante é dividida em três matrizes, correspondendo aos canais vermelho, verde e azul do DNA.
+- Encriptar uma imagem usando a chave codificada em DNA. A imagem é dividida em seus canais vermelho, verde e azul, que são então convertidos em matrizes de valores numéricos. Cada matriz é submetida a uma operação XOR com a matriz correspondente da chave, produzindo uma matriz encriptada. As matrizes encriptadas são então combinadas para formar a imagem encriptada.
+  
 ## Instalação e uso
 - Clone os arquivos deste repositório para uma pasta em seu computador
 
@@ -88,6 +61,8 @@ O processo de decriptar é praticamente igual ao de encriptar. Importe a imagem 
 ```bash
 python decrypt.py
 ```
+## Conclusão
+O projeto é uma demonstração de como usar mapas caóticos e DNA para encriptar arquivos de imagem. O projeto usa uma combinação do mapa logístico, um gerador de números aleatórios quânticos e o mapa de Lorenz para gerar uma chave segura e aleatória, que é então codificada em uma sequência de nucleotídeos que representa DNA. A chave é usada para encriptar uma imagem usando uma operação XOR. O projeto pode ter várias aplicações potenciais, como criptografia de dados, esteganografia ou biologia computacional. O projeto também ilustra a conexão entre a matemática, a física e a biologia, e como elas podem ser usadas para criar sistemas complexos e criativos.
 
 # Créditos
 The author of this project is **Bruno Bezerra Trigueiro**, currently affiliated with the **São Paulo State Technological College (FATEC)**. 
