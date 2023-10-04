@@ -1,60 +1,51 @@
-import tkinter as tk
-from tkinter import filedialog
-import cv2
-import pyperclip
 import numpy as np
-import os
-import datetime
+from datetime import datetime
+from pathlib import Path
+
+from PIL import Image
 
 
-def select_image_path() -> str:
-    """Returns the path to the selected image."""
-    path = "NULL"
-    root = tk.Tk()
-    print("[INFO] Select the image you want to encrypt.")
-    root.withdraw()
-    path = filedialog.askopenfilename()
-    if path != "NULL":
-        print("[OK] Image loaded: " + path + ".\n[OK] Image dimensions: " + str(cv2.imread(path).shape) + ".")
-    else:
-        print("[ERROR] An error has occurred while loading the image.")
-    return path
+def load_rgb_image(image_path: str | Path) -> np.ndarray:
+    """Load an image and return an RGB uint8 array."""
+    with Image.open(image_path) as image:
+        return np.asarray(image.convert("RGB"), dtype=np.uint8)
 
 
-def get_filename_with_timestamp():
-    now = datetime.datetime.now()
-    date_str = now.strftime("%Y-%m-%d")
-    time_str = now.strftime("%H-%M-%S")
-    return f"encrypted_image_{date_str}_{time_str}"
+def split_rgb_channels(image: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Return image channels in explicit RGB order."""
+    if image.ndim != 3 or image.shape[2] != 3:
+        raise ValueError("Expected an RGB image with shape (rows, columns, 3).")
+    return image[:, :, 0], image[:, :, 1], image[:, :, 2]
 
 
-def save_encrypted_image(b: list, g: list, r: list, image_path: str, hash_key: str):
-    img = cv2.imread(image_path)
-    img[:, :, 0], img[:, :, 1], img[:, :, 2] = b, g, r
-    output_folder = "./encrypted_output/"
-    os.makedirs(output_folder, exist_ok=True)
-    file_name = get_filename_with_timestamp()
-    cv2.imwrite(f"{output_folder}{file_name}.png", img)
-    print(f"\n\n[SUCCESS] Encrypted image saved as: {file_name}.png in the 'encrypted_output' folder.")
-    pyperclip.copy(hash_key)
-    show_hash_key = input("[INFO] Do you want to show the hash key? (y/n) [default: n]: ")
-    if show_hash_key.lower() == 'y':
-        print(f"[INFO] Your hash key is: {hash_key}")
-        print("[INFO] The hash key (required to decrypt) was saved to your clipboard.")
-    elif show_hash_key == '':
-        print("[INFO] The hash key (required to decrypt) was saved to your clipboard.")
-    # END: ed8c6549bwf9
+def merge_rgb_channels(red: np.ndarray, green: np.ndarray, blue: np.ndarray) -> np.ndarray:
+    """Merge separate RGB channels into a single RGB image."""
+    if red.shape != green.shape or green.shape != blue.shape:
+        raise ValueError("RGB channels must have matching shapes.")
+    return np.dstack((red, green, blue)).astype(np.uint8)
 
 
-def save_decrypted_image(blue: list, green: list, red: list, p: int, q:int, original_image_path: str):
-    green,red = red, green
+def save_rgb_image(image: np.ndarray, output_path: str | Path) -> Path:
+    """Save an RGB image to disk."""
+    destination = Path(output_path)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    Image.fromarray(image, mode="RGB").save(destination)
+    return destination
 
-    img=np.zeros((p,q,3),dtype=np.uint8)
-    img[:,:,0] = red
-    img[:,:,1] = green
-    img[:,:,2] = blue
-    output_folder = "./decrypted_output/"
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-    cv2.imwrite((output_folder + os.path.basename(original_image_path).removesuffix('.png') + "_decrypted.png"), img)
-    print("[SUCCESS] Decrypted image saved as: " + str((os.path.basename(original_image_path)+"_decrypted.png")) + " in the 'decrypted_output' folder.")
+
+def _timestamp() -> str:
+    return datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+
+def save_encrypted_image(image: np.ndarray, image_path: str | Path, output_dir: str | Path = "encrypted_output") -> Path:
+    """Save an encrypted image using a timestamped filename."""
+    source = Path(image_path)
+    output_path = Path(output_dir) / f"{source.stem}_encrypted_{_timestamp()}.png"
+    return save_rgb_image(image, output_path)
+
+
+def save_decrypted_image(image: np.ndarray, image_path: str | Path, output_dir: str | Path = "decrypted_output") -> Path:
+    """Save a decrypted image using a stable filename."""
+    source = Path(image_path)
+    output_path = Path(output_dir) / f"{source.stem}_decrypted.png"
+    return save_rgb_image(image, output_path)

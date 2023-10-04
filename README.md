@@ -1,74 +1,132 @@
+# Sphinx
 
+Sphinx is an old image-encryption experiment built around chaotic maps and DNA-style image transforms. It is now framed as an educational prototype and code-rehabilitation exercise, not as production cryptography.
 
-<img src="https://i.imgur.com/WKgapd6.jpg">
-<img src="https://img.shields.io/github/last-commit/koobzaar/sphinx?style=for-the-badge">
-<img src="https://img.shields.io/github/languages/code-size/koobzaar/sphinx?style=for-the-badge">
-<img src="https://i.imgur.com/s1vbBhe.png" align="right"
-     alt="Size Limit logo by Anton Lovchikov" width="250" height="148">
+## What This Is
 
-Sphinx é uma demonstração de como usar mapas caóticos e DNA para encriptar arquivos de imagem. O projeto usa uma combinação do mapa logístico, um gerador de números aleatórios quânticos e o mapa de Lorenz para gerar uma chave segura e aleatória, que é então codificada em uma sequência de nucleotídeos que representa DNA. A chave é usada para encriptar uma imagem usando uma operação XOR. O projeto pode ter várias aplicações potenciais, como criptografia de dados, esteganografia ou biologia computacional. O projeto também ilustra a conexão entre a matemática, a física e a biologia, e como elas podem ser usadas para criar sistemas complexos e criativos.
+- A small research-inspired experiment for exploring image transforms built from SHA-256-derived one-time tokens, an NCA-CML-inspired keystream generator, and DNA-style symbol operations.
+- A portfolio cleanup of an earlier prototype, with a focus on reproducibility, clearer interfaces, and more honest claims.
+- A place to study how design choices affect diffusion, locality, and failure modes in custom image ciphers.
 
-**[INFO]** O atractor que está disponível à direita deste readme foi criado utilizando as coordenadas `x`, `y` e `z` geradas para encriptar a imagem `1477351899v6iQb.jpg`. Esse atractor é **ÚNICO** para essa imagem.
+## What This Is Not
 
+- Not a secure cryptography library.
+- Not a replacement for standard authenticated encryption such as AES-GCM or ChaCha20-Poly1305.
+- Not a formally analyzed or security-proven scheme.
 
-<img src="https://i.imgur.com/gEuO1gw.jpg" alt="Size Limit logo by Anton Lovchikov" width="100%">
+If you need real confidentiality or integrity, use standard modern cryptography. This repository is for experimentation and learning.
 
+## Current Pipeline
 
-Algumas **características** de sistemas dinâmicos caóticos, principalmente o **Atractor de Lorenz**, são:
+1. Load an input image as RGB.
+2. Derive a 256-bit experiment token from the image summary vector plus either:
+   - local randomness from Python's `secrets` module, or
+   - optional randomness from the ANU quantum RNG API.
+3. Split the image into tiles.
+4. For each tile:
+   - derive a tile-specific token from the global token,
+   - generate NCA-CML-inspired rule selectors, row-operation selectors, column permutations, and pixel keystreams,
+   - encode RGB bytes with one of the 8 valid DNA rules for each channel,
+   - interleave the DNA rows into a combined matrix and shuffle its columns,
+   - apply row-wise DNA addition, subtraction, or XOR according to the dynamic selector stream,
+   - decode with complementary DNA rules,
+   - apply the paper-shaped pixel diffusion stage.
+5. Save the encrypted image and print the token.
 
-- **Mapas caóticos para gerar números aleatórios que são difíceis de prever ou reproduzir**: os mapas caóticos são funções matemáticas que produzem resultados imprevisíveis e sensíveis às condições iniciais. Um exemplo de mapa caótico é o mapa logístico, que é usado neste projeto.
-- **Gerador de números aleatórios quânticos para adicionar mais entropia e segurança à chave**: o gerador de números aleatórios quânticos é um serviço online que fornece números aleatórios baseados em fenômenos quânticos, como o decaimento radioativo ou a polarização de fótons.
-- **Attractor de Lorenz para aumentar a complexidade e a imprevisibilidade da chave**: o mapa de Lorenz é um sistema de equações diferenciais que descreve o comportamento caótico de um fluido. O mapa de Lorenz produz uma sequência de pontos que formam um padrão tridimensional chamado atrator de Lorenz.
-- DNA como uma forma de codificar a chave em uma sequência de nucleotídeos.
-  
+Decryption reverses the same tile-local pipeline.
 
-## Metodologias
+## Why The Tile-Based Change Matters
 
-O projeto consiste em quatro módulos principais: `generateSecureKey.py`, `lorenzAttractor.py`, `matrixDNAManipulator.py` e `matrixManipulator.py`. Cada módulo contém várias funções e classes que são usadas para realizar as seguintes etapas:
+The old image-wide permutation had a bad failure mode: if a local part of the encrypted image was lost or overwritten, the inverse permutation spread that damage across the whole decrypted image as noise.
 
-- Gerar uma chave segura e aleatória usando o mapa logístico e um gerador de números aleatórios quânticos. O mapa logístico é uma função matemática que produz uma sequência de números aleatórios entre 0 e 1, dependendo dos parâmetros x e r. O gerador de números aleatórios quânticos é um serviço online que fornece números aleatórios baseados em fenômenos quânticos. A chave é formada pela concatenação dos números gerados pelo mapa logístico e pelo gerador quântico.
-- Gerar uma sequência de pontos no mapa de Lorenz, que é um sistema de equações diferenciais que descreve o comportamento caótico de um fluido. O mapa de Lorenz é usado para adicionar mais complexidade e imprevisibilidade à chave. A sequência de pontos é obtida usando a função odeint da biblioteca scipy, que resolve numericamente as equações do mapa de Lorenz.
-- Codificar a chave em uma sequência de nucleotídeos que representa DNA. Cada número da chave é convertido em um valor binário, que é então mapeado para um nucleotídeo (A, T, C ou G) usando um dicionário pré-definido. A sequência resultante é dividida em três matrizes, correspondendo aos canais vermelho, verde e azul do DNA.
-- Encriptar uma imagem usando a chave codificada em DNA. A imagem é dividida em seus canais vermelho, verde e azul, que são então convertidos em matrizes de valores numéricos. Cada matriz é submetida a uma operação XOR com a matriz correspondente da chave, produzindo uma matriz encriptada. As matrizes encriptadas são então combinadas para formar a imagem encriptada.
-  
-## Instalação e uso
-- Clone os arquivos deste repositório para uma pasta em seu computador
+The current implementation encrypts tiles independently by default. That means:
 
-*Em seu terminal, utilize o seguinte comando para clonar os arquivos deste repositório:*
+- localized ciphertext damage tends to stay localized after decryption,
+- damaged regions are easier to inspect,
+- the system is more resilient to partial data loss,
+- the diffusion/locality tradeoff is now explicit through `--tile-size`.
+
+Use smaller tiles for better damage containment. Use `--tile-size 0` to run a single whole-image block.
+
+## Installation
+
 ```bash
-git clone https://github.com/koobzaar/Sphinx.git
-```
--  Instale os requirements para obter todas as dependências do projeto.
-
-*Na pasta do projeto, execute o seguinte comando para instalar as dependências:*
-```bash
-pip install -r requirements.txt
-```
-### Encriptar uma imagem
--  Rode o arquivo `encr.py` para encriptar uma imagem qualquer.
-```bash
-python encrypt.py
-```
-Será aberto seu revelador de arquivos para você selecionar a imagem que você deseja encriptar.
-Após selecionar e abrir a imagem, o processo de encriptação será iniciado. Sua imagem encriptada pode ser encontrada posteriormente na pasta `./encrypted_output`.
-
-**[ATENÇÃO]** Quando acabar a encriptação, será gerado uma chave Hash. Essa chave Hash é NECESSÁRIA para decriptar a imagem posteriormente.
-
-### Decriptar uma imagem
-O processo de decriptar é praticamente igual ao de encriptar. Importe a imagem encriptada e insira a chave hash no terminal. A diferença é que você deve usar o decrypt.py:
-```bash
-python decrypt.py
+python -m pip install -r requirements.txt
 ```
 
-# Créditos
-The author of this project is **Bruno Bezerra Trigueiro**, currently affiliated with the **São Paulo State Technological College (FATEC)**. 
-It's inspired by the following scientific publication:
-https://www.sciencedirect.com/science/article/abs/pii/S0165168418300859
+## Usage
 
-The author can be **contacted** through the email addresses [bruno.trigueiro@proton.me](mailto:bruno.trigueiro@proton.me) or [bruno.trigueiro@fatec.sp.gov.br](mailto:bruno.trigueiro@fatec.sp.gov.br).
-Also, you can contact me at:
-https://www.linkedin.com/in/brunotrigueiro/
+Encrypt an image with the default tile-local mode:
 
- **Disclaimer:** 
- It is important to note that this project are of an academic nature and should not be interpreted as proven scientific facts.
+```bash
+python encrypt.py images/m6kuvrsdpy551.png --token-file output/token.json
+```
+
+Choose a smaller tile size to contain corruption more aggressively:
+
+```bash
+python encrypt.py images/m6kuvrsdpy551.png --tile-size 32 --token-file output/token.json
+```
+
+Enable analysis plots:
+
+```bash
+python encrypt.py images/m6kuvrsdpy551.png --plot --token-file output/token.json
+```
+
+Decrypt with the saved metadata file:
+
+```bash
+python decrypt.py encrypted_output/<encrypted-file>.png --token-file output/token.json
+```
+
+You can also pass the token directly:
+
+```bash
+python decrypt.py encrypted_output/<encrypted-file>.png --token <64-hex-token> --tile-size 64
+```
+
+## Files
+
+- `encrypt.py`: CLI entrypoint for encryption.
+- `decrypt.py`: CLI entrypoint for decryption.
+- `functions/pipeline.py`: deterministic orchestration for encrypt/decrypt.
+- `functions/generateSecureKey.py`: token derivation and optional analysis helpers.
+- `functions/ncaCml.py`: NCA-CML-inspired parameter updates, rule selection, permutations, and keystream generation.
+- `functions/matrixDNAManipulator.py`: the 8 DNA rules plus DNA addition, subtraction, XOR, and inverse operations.
+- `functions/pipeline.py`: tile-local paper-shaped encryption/decryption orchestration.
+
+## Testing
+
+```bash
+python -m unittest discover -s tests
+```
+
+The test suite covers:
+
+- encrypt/decrypt round-trip,
+- DNA encode/decode round-trip,
+- RGB channel ordering,
+- deterministic NCA-CML key-material generation,
+- CLI smoke tests,
+- localized damage staying inside the affected tile.
+
+## Limitations
+
+- The algorithm is custom and should not be treated as secure cryptography.
+- Tile-local processing improves resilience to partial data loss, but it also reduces global diffusion compared with a whole-image permutation.
+- The current implementation is inspired by the 2018 paper, but it is still a pragmatic reconstruction rather than a claim of exact scientific reproduction.
+- The ANU API path is optional and requires an API key via `SPHINX_ANU_API_KEY` or `ANU_API_KEY`.
+
+## Reference
+
+This repository was inspired by chaos-based image-encryption literature, including:
+
+- https://www.sciencedirect.com/science/article/abs/pii/S0165168418300859
+
+## Author
+
+Bruno Bezerra Trigueiro  
+[bruno.trigueiro@proton.me](mailto:bruno.trigueiro@proton.me)  
+[LinkedIn](https://www.linkedin.com/in/brunotrigueiro/)
  

@@ -1,173 +1,155 @@
+from dataclasses import dataclass
+
 import numpy as np
-from tqdm import tqdm
+
+
+BASE_SYMBOLS = np.array(["A", "C", "G", "T"], dtype="<U1")
+
+# Rules are stored as bit-pair -> base-index maps, using bit-pair order 00, 01, 10, 11.
+RULE_BIT_TO_BASE = np.array(
+    [
+        [0, 1, 2, 3],
+        [0, 2, 1, 3],
+        [1, 0, 3, 2],
+        [2, 0, 3, 1],
+        [1, 3, 0, 2],
+        [2, 3, 0, 1],
+        [3, 1, 2, 0],
+        [3, 2, 1, 0],
+    ],
+    dtype=np.uint8,
+)
+RULE_BASE_TO_BIT = np.argsort(RULE_BIT_TO_BASE, axis=1).astype(np.uint8)
+
+
+DNA_OPERATION_TABLES = {
+    "xor": np.array(
+        [
+            [2, 3, 0, 1],
+            [3, 2, 1, 0],
+            [0, 1, 2, 3],
+            [1, 0, 3, 2],
+        ],
+        dtype=np.uint8,
+    ),
+    "add": np.array(
+        [
+            [3, 0, 1, 2],
+            [0, 1, 2, 3],
+            [1, 2, 3, 0],
+            [2, 3, 0, 1],
+        ],
+        dtype=np.uint8,
+    ),
+    "sub": np.array(
+        [
+            [1, 2, 3, 0],
+            [0, 1, 2, 3],
+            [3, 0, 1, 2],
+            [2, 3, 0, 1],
+        ],
+        dtype=np.uint8,
+    ),
+}
+
+
+def _build_left_inverse(table: np.ndarray) -> np.ndarray:
+    inverse = np.empty_like(table)
+    for left in range(4):
+        for right in range(4):
+            inverse[table[left, right], right] = left
+    return inverse
+
+
+DNA_LEFT_INVERSES = {
+    name: _build_left_inverse(table) for name, table in DNA_OPERATION_TABLES.items()
+}
+
+
+def _pair_bits(bit_matrix: np.ndarray) -> np.ndarray:
+    paired_bits = bit_matrix.reshape(bit_matrix.shape[0], -1, 2)
+    return ((paired_bits[:, :, 0] << 1) | paired_bits[:, :, 1]).astype(np.uint8)
+
+
+def _unpair_bits(pair_matrix: np.ndarray) -> np.ndarray:
+    bit_matrix = np.empty((pair_matrix.shape[0], pair_matrix.shape[1] * 2), dtype=np.uint8)
+    bit_matrix[:, 0::2] = pair_matrix >> 1
+    bit_matrix[:, 1::2] = pair_matrix & 1
+    return bit_matrix
+
+
+def _normalize_rule(rule: int) -> int:
+    if rule < 0 or rule > 7:
+        raise ValueError("DNA rule must be between 0 and 7.")
+    return int(rule)
+
+
+def encode_channel(channel: np.ndarray, rule: int) -> np.ndarray:
+    """Encode a uint8 image channel into DNA indices using one of the 8 valid rules."""
+    normalized_rule = _normalize_rule(rule)
+    bit_pairs = _pair_bits(np.unpackbits(channel.astype(np.uint8), axis=1))
+    return RULE_BIT_TO_BASE[normalized_rule][bit_pairs]
+
+
+def decode_channel(dna_matrix: np.ndarray, rule: int) -> np.ndarray:
+    """Decode a DNA-index matrix into a uint8 image channel using the selected rule."""
+    normalized_rule = _normalize_rule(rule)
+    bit_pairs = RULE_BASE_TO_BIT[normalized_rule][dna_matrix.astype(np.uint8)]
+    return np.packbits(_unpair_bits(bit_pairs), axis=1)
+
+
+def apply_dna_operation(left: np.ndarray, right: np.ndarray, operation: str) -> np.ndarray:
+    """Apply a DNA operation to two DNA-index matrices."""
+    table = DNA_OPERATION_TABLES[operation]
+    return table[left.astype(np.uint8), right.astype(np.uint8)]
+
+
+def invert_dna_operation(result: np.ndarray, right: np.ndarray, operation: str) -> np.ndarray:
+    """Recover the left operand of a DNA operation from the result and the right operand."""
+    inverse = DNA_LEFT_INVERSES[operation]
+    return inverse[result.astype(np.uint8), right.astype(np.uint8)]
+
+
+@dataclass(frozen=True)
+class DnaRules:
+    red: int
+    green: int
+    blue: int
+
+    @property
+    def decode_rules(self) -> "DnaRules":
+        return DnaRules(7 - self.red, 7 - self.green, 7 - self.blue)
+
 
 class DnaEncoder:
-    def __init__(self):
-        self.dna = {
-            "00": "A",
-            "01": "T",
-            "10": "G",
-            "11": "C",
-            "A": [0, 0],
-            "T": [0, 1],
-            "G": [1, 0],
-            "C": [1, 1],
-            "AA": "A",
-            "TT": "A",
-            "GG": "A",
-            "CC": "A",
-            "AG": "G",
-            "GA": "G",
-            "TC": "G",
-            "CT": "G",
-            "AC": "C",
-            "CA": "C",
-            "GT": "C",
-            "TG": "C",
-            "AT": "T",
-            "TA": "T",
-            "CG": "T",
-            "GC": "T"
-        }
+    """Encode RGB channels into DNA indices using per-channel rules."""
 
-    def encode(self, blue_matrix, green_matrix, red_matrix):
-            red_matrix = np.unpackbits(red_matrix, axis=1)
-            green_matrix = np.unpackbits(green_matrix, axis=1)
-            blue_matrix = np.unpackbits(blue_matrix, axis=1)
-            m, n = red_matrix.shape
-            encoded_red_matrix = np.chararray((m, int(n/2)))
-            encoded_green_matrix = np.chararray((m, int(n/2)))
-            encoded_blue_matrix = np.chararray((m, int(n/2)))
-            matrix_names = ["red", "green", "blue"]
-            for color, encoded, matrix_name in zip((red_matrix, green_matrix, blue_matrix), 
-                                                   (encoded_red_matrix, encoded_green_matrix, encoded_blue_matrix),
-                                                   matrix_names):
-                idx = 0
-                for j in tqdm(range(0, m), desc=f"Encoding {matrix_name} matrix into nucleotides..."):
-                    for i in range(0, n, 2):
-                        encoded[j, idx] = self.dna[f"{color[j, i]}{color[j, i+1]}"]
-                        idx += 1
-                        if i == n-2:
-                            idx = 0
-                            break
-            
-            encoded_red_matrix = encoded_red_matrix.astype(str)
-            encoded_green_matrix = encoded_green_matrix.astype(str)
-            encoded_blue_matrix = encoded_blue_matrix.astype(str)
-            return encoded_red_matrix, encoded_green_matrix, encoded_blue_matrix
-
-
-class KeyMatrixEncoder:
-    def __init__(self):
-        self.dna = {
-            "00": "A",
-            "01": "T",
-            "10": "G",
-            "11": "C",
-            "A": [0, 0],
-            "T": [0, 1],
-            "G": [1, 0],
-            "C": [1, 1]
-        }
-
-    def encode(self, key, matrix):
-        matrix = np.unpackbits(matrix, axis=1)
-        m, n = matrix.shape
-        key_bin = bin(int(key, 16))[2:].zfill(256)
-        Mk = np.zeros((m, n), dtype=np.uint8)
-        x = 0
-        for j in tqdm(range(0, m), desc="Using a hash key to generate a binary matrix Mk..."):
-            for i in range(0, n):
-                Mk[j, i] = key_bin[x % 256]
-                x += 1
-
-        Mk_enc = np.chararray((m, int(n/2)))
-        idx = 0
-        for j in tqdm(range(0, m), desc="Encoding the binary matrix Mk into nucleotides..."):
-            for i in range(0, n, 2):
-                if idx == (n/2):
-                    idx = 0
-                Mk_enc[j, idx] = self.dna["{0}{1}".format(Mk[j, i], Mk[j, i+1])]
-                idx += 1
-        Mk_enc = Mk_enc.astype(str)
-        return Mk_enc
-
-
-class XorOperation:
-    def __init__(self):
-        self.dna = {
-            "00": "A",
-            "01": "T",
-            "10": "G",
-            "11": "C",
-            "A": [0, 0],
-            "T": [0, 1],
-            "G": [1, 0],
-            "C": [1, 1],
-            "AA": "A",
-            "TT": "A",
-            "GG": "A",
-            "CC": "A",
-            "AG": "G",
-            "GA": "G",
-            "TC": "G",
-            "CT": "G",
-            "AC": "C",
-            "CA": "C",
-            "GT": "C",
-            "TG": "C",
-            "AT": "T",
-            "TA": "T",
-            "CG": "T",
-            "GC": "T"
-        }
-
-    def apply(self, b, g, r, mk):
-        m,n = b.shape
-        bx=np.chararray((m,n))
-        gx=np.chararray((m,n))
-        rx=np.chararray((m,n))
-        b=b.astype(str)
-        g=g.astype(str)
-        r=r.astype(str)
-        for i in tqdm(range(0,m), desc="────█ Applying XOR to the R, G, and B matrices..."):
-            for j in range (0,n):
-                bx[i,j] = self.dna["{0}{1}".format(b[i,j],mk[i,j])]
-                gx[i,j] = self.dna["{0}{1}".format(g[i,j],mk[i,j])]
-                rx[i,j] = self.dna["{0}{1}".format(r[i,j],mk[i,j])]
-            
-        bx=bx.astype(str)
-        gx=gx.astype(str)
-        rx=rx.astype(str)
-        return bx,gx,rx 
+    def encode(
+        self,
+        red_matrix: np.ndarray,
+        green_matrix: np.ndarray,
+        blue_matrix: np.ndarray,
+        rules: DnaRules,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        return (
+            encode_channel(red_matrix, rules.red),
+            encode_channel(green_matrix, rules.green),
+            encode_channel(blue_matrix, rules.blue),
+        )
 
 
 class DnaDecoder:
-    def __init__(self):
-        self.dna = {
-            "00": "A",
-            "01": "T",
-            "10": "G",
-            "11": "C",
-            "A": [0, 0],
-            "T": [0, 1],
-            "G": [1, 0],
-            "C": [1, 1]
-        }
+    """Decode DNA-index matrices into uint8 RGB channels using per-channel rules."""
 
-    def decode(self, b, g, r):
-        m,n = b.shape
-        r_dec= np.ndarray((m,int(n*2)),dtype=np.uint8)
-        g_dec= np.ndarray((m,int(n*2)),dtype=np.uint8)
-        b_dec= np.ndarray((m,int(n*2)),dtype=np.uint8)
-
-        for color,dec in zip((b,g,r),(b_dec,g_dec,r_dec)):
-            for j in tqdm(range(0,m),desc="────█ Decoding nucleotides..."):
-                for i in range(0,n):
-                    dec[j,2*i]=self.dna["{0}".format(color[j,i])][0]
-                    dec[j,2*i+1]=self.dna["{0}".format(color[j,i])][1]
-
-        b_dec=(np.packbits(b_dec,axis=-1))
-        g_dec=(np.packbits(g_dec,axis=-1))
-        r_dec=(np.packbits(r_dec,axis=-1))
-        return b_dec,g_dec,r_dec
+    def decode(
+        self,
+        red_matrix: np.ndarray,
+        green_matrix: np.ndarray,
+        blue_matrix: np.ndarray,
+        rules: DnaRules,
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        return (
+            decode_channel(red_matrix, rules.red),
+            decode_channel(green_matrix, rules.green),
+            decode_channel(blue_matrix, rules.blue),
+        )
