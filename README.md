@@ -147,8 +147,3 @@ The test suite covers:
 Inspired by chaos-based image-encryption literature, including:
 
 > Hua, Z. et al. (2018). *2D Sine Logistic modulation map for image encryption.* Information Sciences. [doi:10.1016/j.ins.2018.04.013](https://www.sciencedirect.com/science/article/abs/pii/S0165168418300859)
-
-## Author
-
-**Bruno Bezerra Trigueiro**  
-[bruno.trigueiro@proton.me](mailto:bruno.trigueiro@proton.me) · [LinkedIn](https://www.linkedin.com/in/brunotrigueiro/)
